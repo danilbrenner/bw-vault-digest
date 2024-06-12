@@ -1,27 +1,48 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
 using VaultSummary.App;
 using VaultSummary.Data;
 
-var builder =
-    WebApplication
-        .CreateBuilder(args)
-        .ConfigureServices((cfg, svc) =>
-        {
-            var connectionString = cfg.GetConnectionString("SqlData");
-            if (connectionString is null)
-                throw new ArgumentException("SqlData connection string not set");
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
-            svc
-                .AddData(connectionString)
-                .AddVaultSummaryHealth();
-        });
-
-var app = builder.Build();
-
-app.ApplyMigrations();
-app.MapHealthChecks("/health", new HealthCheckOptions
+try
 {
-    ResponseWriter = HealthCheckExtensions.WriteResponse
-});
+    var builder =
+        WebApplication
+            .CreateBuilder(args)
+            .ConfigureServices((cfg, svc) =>
+            {
+                var connectionString = cfg.GetConnectionString("SqlData");
+                if (connectionString is null)
+                    throw new ArgumentException("SqlData connection string not set");
 
-app.Run();
+                svc
+                    .AddData(connectionString)
+                    .AddVaultSummaryHealth()
+                    .AddSerilog();
+            });
+
+    builder
+        .Host
+        .UseSerilog((context, configuration) => { configuration.ReadFrom.Configuration(context.Configuration); });
+
+    var app = builder.Build();
+
+    app.ApplyMigrations();
+    app.MapHealthChecks("/health", new HealthCheckOptions
+    {
+        ResponseWriter = HealthCheckExtensions.WriteResponse
+    });
+
+    app.Run();
+}
+catch (Exception exception)
+{
+    Log.Fatal(exception, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
