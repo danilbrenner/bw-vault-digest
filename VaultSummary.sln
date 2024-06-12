@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultSummary.App", "src\Vau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultSummary.UnitTests", "tests\VaultSummary.UnitTests\VaultSummary.UnitTests.csproj", "{7A62018F-0504-43A3-B24E-4C8188E1A3A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VaultSummary.Data", "src\VaultSummary.Data\VaultSummary.Data.csproj", "{49093259-C32B-4DFF-8240-13C92CB48DCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +18,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{50807D46-15B1-43A4-827D-65F0582739B5} = {A7F1BBFA-3215-4511-AD82-F4A61A8504CB}
 		{7A62018F-0504-43A3-B24E-4C8188E1A3A4} = {FBEA0FE3-3679-47B8-BAC0-F8EB6C89C207}
+		{49093259-C32B-4DFF-8240-13C92CB48DCB} = {A7F1BBFA-3215-4511-AD82-F4A61A8504CB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{50807D46-15B1-43A4-827D-65F0582739B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -26,5 +29,9 @@ Global
 		{7A62018F-0504-43A3-B24E-4C8188E1A3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A62018F-0504-43A3-B24E-4C8188E1A3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A62018F-0504-43A3-B24E-4C8188E1A3A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49093259-C32B-4DFF-8240-13C92CB48DCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49093259-C32B-4DFF-8240-13C92CB48DCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49093259-C32B-4DFF-8240-13C92CB48DCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49093259-C32B-4DFF-8240-13C92CB48DCB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
