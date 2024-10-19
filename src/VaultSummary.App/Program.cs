@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using VaultSummary.App;
-using VaultSummary.Data;
 using VaultSummary.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
@@ -15,12 +14,7 @@ try
             .CreateBuilder(args)
             .ConfigureServices((cfg, svc) =>
             {
-                var connectionString = cfg.GetConnectionString("SqlData");
-                if (connectionString is null)
-                    throw new ArgumentException("SqlData connection string not set");
-
                 svc
-                    .AddData(connectionString)
                     .AddVaultSummaryHealth()
                     .AddSerilog()
                     .AddInfrastructure(cfg);
@@ -32,7 +26,6 @@ try
 
     var app = builder.Build();
 
-    app.ApplyMigrations();
     app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = HealthCheckExtensions.WriteResponse

@@ -1,7 +1,6 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using VaultSummary.Data;
 
 namespace VaultSummary.App;
 
@@ -9,9 +8,7 @@ public static class HealthCheckExtensions
 {
     public static IServiceCollection AddVaultSummaryHealth(this IServiceCollection svc)
     {
-        svc
-            .AddHealthChecks()
-            .AddDbContextCheck<VaultSummaryContext>();
+        svc.AddHealthChecks();
         return svc;
     }
 
