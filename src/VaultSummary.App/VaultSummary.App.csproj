@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\VaultSummary.Data\VaultSummary.Data.csproj"/>
+        <ProjectReference Include="..\VaultSummary.Infrastructure\VaultSummary.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

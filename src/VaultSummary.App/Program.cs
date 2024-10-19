@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using VaultSummary.App;
 using VaultSummary.Data;
+using VaultSummary.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -21,7 +22,8 @@ try
                 svc
                     .AddData(connectionString)
                     .AddVaultSummaryHealth()
-                    .AddSerilog();
+                    .AddSerilog()
+                    .AddInfrastructure(cfg);
             });
 
     builder
