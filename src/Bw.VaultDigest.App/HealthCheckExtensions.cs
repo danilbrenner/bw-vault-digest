@@ -2,11 +2,11 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace VaultSummary.App;
+namespace Bw.VaultDigest.App;
 
 public static class HealthCheckExtensions
 {
-    public static IServiceCollection AddVaultSummaryHealth(this IServiceCollection svc)
+    public static IServiceCollection AddVaultDigestHealth(this IServiceCollection svc)
     {
         svc.AddHealthChecks();
         return svc;

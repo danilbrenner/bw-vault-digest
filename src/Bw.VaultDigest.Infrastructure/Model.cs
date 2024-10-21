@@ -1,4 +1,4 @@
-namespace VaultSummary.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure;
 
 public class ApiKeys
 {

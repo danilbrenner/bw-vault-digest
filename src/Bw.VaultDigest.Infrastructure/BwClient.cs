@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json;
+using Bw.VaultDigest.Common;
 using Microsoft.Extensions.Logging;
-using VaultSummary.Common;
 
-namespace VaultSummary.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure;
 
 using EnvVariables = IDictionary<string, string>;
 

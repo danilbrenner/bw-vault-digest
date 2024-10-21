@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace VaultSummary.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure;
 
 public static class Setup
 {

@@ -16,6 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\VaultSummary.Common\VaultSummary.Common.csproj"/>
+        <ProjectReference Include="..\Bw.VaultDigest.Common\Bw.VaultDigest.Common.csproj"/>
     </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 using System.Text.Json;
-using VaultSummary.Infrastructure;
+using Bw.VaultDigest.Infrastructure;
 
-namespace VaultSummary.UnitTests.Infrastructure.BwClientTests;
+namespace Bw.VaultDigest.UnitTests.Infrastructure.BwClientTests;
 
 public class SerializationTests
 {

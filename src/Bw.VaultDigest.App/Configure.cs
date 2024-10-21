@@ -1,4 +1,4 @@
-namespace VaultSummary.App;
+namespace Bw.VaultDigest.App;
 
 public static class Configure
 {

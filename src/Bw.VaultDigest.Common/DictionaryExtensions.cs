@@ -1,4 +1,4 @@
-namespace VaultSummary.Common;
+namespace Bw.VaultDigest.Common;
 
 public static class DictionaryExtensions
 {

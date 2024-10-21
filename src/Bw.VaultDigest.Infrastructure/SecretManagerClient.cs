@@ -2,7 +2,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Options;
 
-namespace VaultSummary.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure;
 
 public class SecretManagerOptions
 {

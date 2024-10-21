@@ -1,11 +1,11 @@
 using AutoFixture;
 using AutoFixture.Xunit2;
+using Bw.VaultDigest.Common;
+using Bw.VaultDigest.Infrastructure;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
-using VaultSummary.Common;
-using VaultSummary.Infrastructure;
 
-namespace VaultSummary.UnitTests.Infrastructure.BwClientTests;
+namespace Bw.VaultDigest.UnitTests.Infrastructure.BwClientTests;
 
 using EnvVariables = IDictionary<string, string>;
 

@@ -1,7 +1,7 @@
+using Bw.VaultDigest.App;
+using Bw.VaultDigest.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
-using VaultSummary.App;
-using VaultSummary.Infrastructure;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -15,7 +15,7 @@ try
             .ConfigureServices((cfg, svc) =>
             {
                 svc
-                    .AddVaultSummaryHealth()
+                    .AddVaultDigestHealth()
                     .AddSerilog()
                     .AddInfrastructure(cfg);
             });
