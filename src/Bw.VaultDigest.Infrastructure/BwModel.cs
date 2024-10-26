@@ -33,7 +33,7 @@ public class LoginUri
     public required string Uri { get; init; }
 }
 
-public class Login
+public class LoginContent
 {
     public required List<string> Fido2Credentials { get; init; } = [];
     public List<LoginUri>? Uris { get; init; } = [];
@@ -43,7 +43,7 @@ public class Login
     public DateTime? PasswordRevisionDate { get; init; }
 }
 
-public class Card
+public class CardContent
 {
     public required string CardholderName { get; init; }
     public required string Brand { get; init; }
@@ -53,7 +53,7 @@ public class Card
     public required string Code { get; init; }
 }
 
-public class SecureNote
+public class SecureNoteContent
 {
     public required int Type { get; init; }
 }
@@ -74,7 +74,7 @@ public class Item
     public string? Notes { get; init; }
     public required bool Favorite { get; init; }
     public required List<Guid> CollectionIds { get; init; } = [];
-    public Login? Login { get; init; }
-    public SecureNote? SecureNote { get; init; }
-    public Card? Card { get; init; }
+    public LoginContent? Login { get; init; }
+    public SecureNoteContent? SecureNote { get; init; }
+    public CardContent? Card { get; init; }
 }

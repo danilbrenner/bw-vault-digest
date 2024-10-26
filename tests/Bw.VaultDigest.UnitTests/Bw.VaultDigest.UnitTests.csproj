@@ -27,10 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Infrastructure\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\..\src\Bw.VaultDigest.Common\Bw.VaultDigest.Common.csproj"/>
         <ProjectReference Include="..\..\src\Bw.VaultDigest.Infrastructure\Bw.VaultDigest.Infrastructure.csproj"/>
     </ItemGroup>

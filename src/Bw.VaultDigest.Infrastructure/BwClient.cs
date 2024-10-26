@@ -9,7 +9,7 @@ using EnvVariables = IDictionary<string, string>;
 
 public interface IBwClient
 {
-    public Task<IEnumerable<Item>> GetLogins();
+    public Task<IEnumerable<Item>> GetItems();
 }
 
 public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient> logger) : IBwClient
@@ -22,7 +22,7 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
 
     private static EnvVariables EmptyEnvVars => new Dictionary<string, string>();
 
-    public async Task<IEnumerable<Item>> GetLogins()
+    public async Task<IEnumerable<Item>> GetItems()
     {
         logger.LogInformation("Getting logins");
 

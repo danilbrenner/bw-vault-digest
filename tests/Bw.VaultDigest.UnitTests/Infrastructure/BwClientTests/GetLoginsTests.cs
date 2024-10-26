@@ -139,7 +139,7 @@ public class GetLoginsTests
         SetupUnlock(password, sessionToken);
         SetupGetLogins(sessionToken, items);
 
-        var logins = await _bwClientMock.Object.GetLogins();
+        var logins = await _bwClientMock.Object.GetItems();
 
         VerifyLoginCalled(keys.ClientId, keys.ClientSecret, Times.Once());
         VerifyUnlockCalled(password, Times.Once());
@@ -160,7 +160,7 @@ public class GetLoginsTests
         SetupUnlock(password, sessionToken);
         SetupGetLogins(sessionToken, items);
 
-        var logins = await _bwClientMock.Object.GetLogins();
+        var logins = await _bwClientMock.Object.GetItems();
 
         VerifyLoginNotCalled();
         VerifyUnlockCalled(password, Times.Once());
@@ -182,7 +182,7 @@ public class GetLoginsTests
         SetupGetLogins(sessionToken, null);
 
         // var logins = await 
-        Func<Task> act = () => _bwClientMock.Object.GetLogins();
+        Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
             .Should()
@@ -203,7 +203,7 @@ public class GetLoginsTests
             .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
             .ReturnsAsync(new StatusInfo { Status = "locked" });
 
-        Func<Task> act = () => _bwClientMock.Object.GetLogins();
+        Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
             .Should()
@@ -224,7 +224,7 @@ public class GetLoginsTests
             .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
             .ReturnsAsync(new StatusInfo { Status = "unauthenticated" });
 
-        Func<Task> act = () => _bwClientMock.Object.GetLogins();
+        Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
             .Should()
@@ -245,7 +245,7 @@ public class GetLoginsTests
             .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
             .ReturnsAsync(new StatusInfo { Status = _fixture.Create<string>() });
 
-        Func<Task> act = () => _bwClientMock.Object.GetLogins();
+        Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
             .Should()

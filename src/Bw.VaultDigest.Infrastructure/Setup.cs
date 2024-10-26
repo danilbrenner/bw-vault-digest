@@ -11,6 +11,7 @@ public static class Setup
             svc
                 .Configure<SecretManagerOptions>(config.GetSection("SecretManager"))
                 .AddTransient<ISecretManagerClient, AzureSecretManagerClient>()
-                .AddTransient<IBwClient, BwClient>();
+                .AddTransient<IBwClient, BwClient>()
+                .AddTransient<ILoginProviderAdapter, LoginProviderAdapter>();
     }
 }
