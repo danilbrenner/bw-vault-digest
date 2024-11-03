@@ -8,7 +8,7 @@ namespace Bw.VaultDigest.Infrastructure;
 
 public interface IEmailNotifier
 {
-    Task SendEmail(string to, string subject, string body, IReadOnlyList<(string, byte[])> images);
+    Task SendEmail(string to, string body, IReadOnlyList<(string, byte[])> images);
 }
 
 public class EmailNotifierOptions
@@ -18,6 +18,7 @@ public class EmailNotifierOptions
     public required int SmtpPort { get; init; }
     public required string Username { get; init; }
     public required string Password { get; init; }
+    public required string DigestTitle { get; init; }
 }
 
 public class EmailNotifier(IOptions<EmailNotifierOptions> emailOptions, ILogger<EmailNotifier> logger) : IEmailNotifier
@@ -33,12 +34,12 @@ public class EmailNotifier(IOptions<EmailNotifierOptions> emailOptions, ILogger<
         return image;
     }
 
-    public async Task SendEmail(string to, string subject, string body, IReadOnlyList<(string, byte[])> images)
+    public async Task SendEmail(string to, string body, IReadOnlyList<(string, byte[])> images)
     {
         logger.LogInformation("Sending email notification to {To}", to);
         var options = emailOptions.Value;
 
-        var message = new MailMessage(options.From, to, subject, body)
+        var message = new MailMessage(options.From, to, options.DigestTitle, body)
         {
             IsBodyHtml = true
         };
