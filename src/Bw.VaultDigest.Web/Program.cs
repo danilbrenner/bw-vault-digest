@@ -1,4 +1,4 @@
-using Bw.VaultDigest.App;
+using Bw.VaultDigest.Web;
 using Bw.VaultDigest.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;

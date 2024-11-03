@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Bw.VaultDigest.App;
+namespace Bw.VaultDigest.Web;
 
 public static class HealthCheckExtensions
 {
