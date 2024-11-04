@@ -9,6 +9,7 @@ using EnvVariables = IDictionary<string, string>;
 
 public interface IBwClient
 {
+    public Task<string> GetUserEmail();
     public Task<IEnumerable<Item>> GetItems();
 }
 
@@ -21,6 +22,18 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
     };
 
     private static EnvVariables EmptyEnvVars => new Dictionary<string, string>();
+
+    public async Task<string> GetUserEmail()
+    {
+        var status = await Request<StatusInfo>(EmptyEnvVars, "status");
+        return
+            status switch
+            {
+                { Status: "unauthenticated" } => await Authenticate(),
+                { UserEmail: null } => throw new ApplicationException("Could not get user email"),
+                _ => status.UserEmail
+            };
+    }
 
     public async Task<IEnumerable<Item>> GetItems()
     {

@@ -8,6 +8,7 @@ public class ApiKeys
 
 public class StatusInfo
 {
+    public string? UserEmail { get; set; }
     public required string Status { get; init; }
     public DateTime? LastSync { get; init; }
     public string? ServerUrl { get; init; }

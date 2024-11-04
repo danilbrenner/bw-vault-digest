@@ -21,3 +21,5 @@ public enum Strength
 public record Password(Age Age, Strength Strength);
 
 public record Login(Guid Id, string Name, Password Password);
+
+public record LoginsSet(string UserEmail, IReadOnlyList<Login> Logins);
