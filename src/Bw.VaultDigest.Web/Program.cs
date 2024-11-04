@@ -1,5 +1,6 @@
 using Bw.VaultDigest.Web;
 using Bw.VaultDigest.Infrastructure;
+using Bw.VaultDigest.Web.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
@@ -17,7 +18,8 @@ try
                 svc
                     .AddVaultDigestHealth()
                     .AddSerilog()
-                    .AddInfrastructure(cfg);
+                    .AddInfrastructure(cfg)
+                    .AddTransient<DigestService>();
             });
 
     builder
@@ -25,7 +27,7 @@ try
         .UseSerilog((context, configuration) => { configuration.ReadFrom.Configuration(context.Configuration); });
 
     var app = builder.Build();
-
+    
     app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = HealthCheckExtensions.WriteResponse
