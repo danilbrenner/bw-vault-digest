@@ -19,7 +19,9 @@ try
                     .AddVaultDigestHealth()
                     .AddSerilog()
                     .AddInfrastructure(cfg)
-                    .AddTransient<DigestService>();
+                    .AddTransient<DigestService>()
+                    .Configure<Schedule>(cfg.GetSection("Schedule"))
+                    .AddHostedService<RepeaterService>();
             });
 
     builder
