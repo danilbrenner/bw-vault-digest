@@ -82,7 +82,7 @@ public static class Mapping
             };
     }
 
-    public static IReadOnlyList<Login> ToLogins(this IEnumerable<Item> logins, DateTime now)
+    public static IReadOnlyList<Login> ToLogins(this IReadOnlyList<Item> logins, DateTime now)
     {
         return
             logins

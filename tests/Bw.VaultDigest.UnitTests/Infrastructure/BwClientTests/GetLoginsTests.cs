@@ -58,13 +58,13 @@ public class GetLoginsTests
             .ReturnsAsync(sessionToken);
     }
 
-    private void SetupGetLogins(string sessionToken, IEnumerable<Item>? items)
+    private void SetupGetLogins(string sessionToken, IReadOnlyList<Item>? items)
     {
         _bwClientMock
             .Protected()
             .As<ITest>()
             .Setup(c =>
-                c.Request<IEnumerable<Item>?>(
+                c.Request<IReadOnlyList<Item>?>(
                     EmptyEnvVars.FAdd("BW_SESSION", sessionToken),
                     "list",
                     "items"))
@@ -77,7 +77,7 @@ public class GetLoginsTests
             .Protected()
             .As<ITest>()
             .Verify(c =>
-                    c.Request<IEnumerable<Item>>(
+                    c.Request<IReadOnlyList<Item>>(
                         EmptyEnvVars.FAdd("BW_SESSION", sessionToken),
                         "list",
                         "items"),

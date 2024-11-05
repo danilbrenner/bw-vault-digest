@@ -37,35 +37,35 @@ public class EmailNotifier(IOptions<EmailNotifierOptions> emailOptions, ILogger<
 
     public async Task SendEmail(string body, IReadOnlyList<(string, byte[])> images)
     {
-        var options = emailOptions.Value;
-        logger.LogInformation("Sending email notification to {To}", options.To);
-
-        var message = new MailMessage(options.From, options.To, options.DigestTitle, body)
-        {
-            IsBodyHtml = true
-        };
-
-        var alternateView =
-            AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
-
-        images.Select(ToPngAttachment).ToList().ForEach(alternateView.LinkedResources.Add);
-
-        message.AlternateViews.Add(alternateView);
-
-        var client = new SmtpClient(options.SmtpServer, options.SmtpPort)
-        {
-            Credentials = new NetworkCredential(options.Username, options.Password),
-            EnableSsl = true
-        };
-
         try
         {
+            var options = emailOptions.Value;
+            logger.LogTrace("Sending email notification to {To}", options.To);
+
+            var message = new MailMessage(options.From, options.To, options.DigestTitle, body)
+            {
+                IsBodyHtml = true
+            };
+
+            var alternateView =
+                AlternateView.CreateAlternateViewFromString(body, null, MediaTypeNames.Text.Html);
+
+            images.Select(ToPngAttachment).ToList().ForEach(alternateView.LinkedResources.Add);
+
+            message.AlternateViews.Add(alternateView);
+
+            var client = new SmtpClient(options.SmtpServer, options.SmtpPort)
+            {
+                Credentials = new NetworkCredential(options.Username, options.Password),
+                EnableSsl = true
+            };
+
             await client.SendMailAsync(message);
-            logger.LogInformation("Email notification sent");
+            logger.LogTrace("Email notification sent");
         }
         catch (Exception ex)
         {
-            logger.LogInformation(ex, "Failed to send email notification");
+            logger.LogError(ex, "Failed to send email notification");
             throw;
         }
     }

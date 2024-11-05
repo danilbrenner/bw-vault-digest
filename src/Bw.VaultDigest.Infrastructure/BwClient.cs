@@ -10,7 +10,7 @@ using EnvVariables = IDictionary<string, string>;
 public interface IBwClient
 {
     public Task<string> GetUserEmail();
-    public Task<IEnumerable<Item>> GetItems();
+    public Task<IReadOnlyList<Item>> GetItems();
 }
 
 public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient> logger) : IBwClient
@@ -35,27 +35,32 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
             };
     }
 
-    public async Task<IEnumerable<Item>> GetItems()
+    public async Task<IReadOnlyList<Item>> GetItems()
     {
-        logger.LogInformation("Getting logins");
+        logger.LogTrace("Getting items");
 
         var session = await GetSession();
+        
+        logger.LogTrace("Session received");
 
         var items =
-            await Request<IEnumerable<Item>>(
+            await Request<IReadOnlyList<Item>>(
                 EmptyEnvVars.FAdd("BW_SESSION", session),
                 "list",
                 "items");
-
+        
         if (items is null)
             throw new Exception("Failed to get logins");
-
+        
+        logger.LogTrace("Got items, {Cnt}", items.Count);
+        
         return items;
     }
 
     private async Task<string> Unlock()
     {
-        logger.LogInformation("Bw Unlocking");
+        logger.LogTrace("Unlocking the vault");
+        
         var password = await secretManagerClient.GetPassword();
         if (password is null) throw new ApplicationException("Could not retrieve master password");
 
@@ -68,7 +73,7 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
 
     private async Task<string> Authenticate()
     {
-        logger.LogInformation("Bw Authentication Started");
+        logger.LogTrace("Authenticating vault");
 
         var apiKeys = await secretManagerClient.GetApiKeys();
 
@@ -81,15 +86,19 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
             "login",
             "--apikey");
 
-        logger.LogInformation("Bw Authentication Succeeded");
+        logger.LogTrace("Vault authentication Succeeded");
 
         return await GetSession();
     }
 
     private async Task<string> GetSession()
     {
+        logger.LogTrace("Getting session");
+        
         var status = await Request<StatusInfo>(EmptyEnvVars, "status");
 
+        logger.LogTrace("Got session status {Status}", status.Status);
+        
         return
             status switch
             {

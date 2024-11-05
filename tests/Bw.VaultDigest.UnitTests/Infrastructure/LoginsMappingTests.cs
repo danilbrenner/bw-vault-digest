@@ -110,7 +110,8 @@ public class LoginsMappingTests
                     .With(l => l.Type, CipherType.Card)
                     .Without(l => l.Login)
                     .Without(l => l.SecureNote)
-                    .CreateMany());
+                    .CreateMany())
+                .ToList();
 
         var logins = items.ToLogins(DateTime.Now);
 
@@ -212,7 +213,7 @@ public class LoginsMappingTests
                     .Create())
             .Create();
 
-        IEnumerable<Item> items = [item];
+        IReadOnlyList<Item> items = [item];
 
         var logins = items.ToLogins(_fixture.Create<DateTime>());
 
@@ -253,7 +254,7 @@ public class LoginsMappingTests
                     .Create())
             .Create();
 
-        IEnumerable<Item> items = [item];
+        IReadOnlyList<Item> items = [item];
 
         var logins = items.ToLogins(now);
 
@@ -262,65 +263,4 @@ public class LoginsMappingTests
         logins[0].Name.Should().Be(item.Name);
         logins[0].Password.Age.Should().Be(expectedAge);
     }
-
-
-    // [Theory]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // [InlineData]
-    // public void Tmp()
-    // {
-    //     var item = _fixture
-    //         .Build<Item>()
-    //         .With(l => l.Type, CipherType.Login)
-    //         .Without(l => l.SecureNote)
-    //         .Without(l => l.Card)
-    //         .With(l => l.Login,
-    //             _fixture.Build<LoginContent>()
-    //                 .With(l => l.Password, GeneratePassword(14, true, true, true, true))
-    //                 .Create())
-    //         .Create();
-    //
-    //     IEnumerable<Item> items = [item];
-    //
-    //     var logins = items.ToLogins(DateTime.Now);
-    //
-    //     logins.Should().HaveCount(1);
-    //     logins[0].Id.Should().Be(item.Id);
-    //     logins[0].Name.Should().Be(item.Name);
-    //     logins[0].Password.Strength.Should().Be(Strength.Strong);
-    // }
 }
