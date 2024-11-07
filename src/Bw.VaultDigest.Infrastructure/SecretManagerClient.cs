@@ -17,18 +17,25 @@ public interface ISecretManagerClient
 
 public class AzureSecretManagerClient : ISecretManagerClient
 {
-    private readonly SecretClient _client;
-
+    private readonly IOptions<SecretManagerOptions> _options;
+    
     public AzureSecretManagerClient(IOptions<SecretManagerOptions> options)
     {
-        var cred = new DefaultAzureCredential();
-        _client = new SecretClient(new Uri(options.Value.VaultUrl), cred);
+        _options = options;
     }
 
+    private SecretClient GetClient()
+    {
+        var cred = new DefaultAzureCredential();
+        return new SecretClient(new Uri(_options.Value.VaultUrl), cred);
+
+    }
+    
     public async Task<ApiKeys?> GetApiKeys()
     {
-        var clientId = await _client.GetSecretAsync("bw-clientid");
-        var clientSecret = await _client.GetSecretAsync("bw-clientsecret");
+        var client = GetClient();
+        var clientId = await client.GetSecretAsync("bw-clientid");
+        var clientSecret = await client.GetSecretAsync("bw-clientsecret");
         if (clientId.HasValue && clientSecret.HasValue)
             return new ApiKeys { ClientId = clientId.Value.Value, ClientSecret = clientSecret.Value.Value };
         return null;
@@ -36,7 +43,7 @@ public class AzureSecretManagerClient : ISecretManagerClient
 
     public async Task<string?> GetPassword()
     {
-        var response = await _client.GetSecretAsync("bw-password");
+        var response = await GetClient().GetSecretAsync("bw-password");
         return response.HasValue ? response.Value.Value : null;
     }
 }

@@ -36,7 +36,7 @@ public class LoginUri
 
 public class LoginContent
 {
-    public required List<string> Fido2Credentials { get; init; } = [];
+    // public required List<????????> Fido2Credentials { get; init; } = [];
     public List<LoginUri>? Uris { get; init; } = [];
     public required string Username { get; init; }
     public required string Password { get; init; }

@@ -57,7 +57,8 @@ public class EmailNotifier(IOptions<EmailNotifierOptions> emailOptions, ILogger<
             var client = new SmtpClient(options.SmtpServer, options.SmtpPort)
             {
                 Credentials = new NetworkCredential(options.Username, options.Password),
-                EnableSsl = true
+                EnableSsl = true,
+                UseDefaultCredentials = false
             };
 
             await client.SendMailAsync(message);
