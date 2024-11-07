@@ -1,5 +1,5 @@
 # Use the official .NET SDK image for .NET 8 to build the app
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project files and restore dependencies
@@ -13,7 +13,7 @@ RUN dotnet restore src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj
 RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -c Release -o /app/out
 
 # Use the official .NET runtime image for .NET 8 to run the app
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM --platform=linux/amd64 mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out .
 
