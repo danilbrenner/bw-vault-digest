@@ -19,13 +19,15 @@ COPY --from=build /app/out .
 
 # Install Bitwarden CLI
 RUN apt-get update && \
-    apt-get install -y wget unzip && \
-    wget -qO /tmp/bw.zip "https://vault.bitwarden.com/download/?app=cli&platform=linux" && \
-    unzip /tmp/bw.zip -d /usr/local/bin && \
-    chmod +x /usr/local/bin/bw && \
-    rm /tmp/bw.zip && \
+    apt-get install -y wget unzip curl gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x -o nodesource_setup.sh && \
+    bash nodesource_setup.sh && \
+    apt-get install -y nodejs && \
     apt-get clean && \
+    rm nodesource_setup.sh && \
     rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g @bitwarden/cli
 
 # Expose the port on which the app will run
 EXPOSE 80
