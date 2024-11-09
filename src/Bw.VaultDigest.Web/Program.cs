@@ -4,8 +4,15 @@ using Bw.VaultDigest.Web.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
+        true)
+    .Build();
+
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .ReadFrom.Configuration(configuration)
     .CreateLogger();
 
 try
@@ -26,10 +33,10 @@ try
 
     builder
         .Host
-        .UseSerilog((context, configuration) => { configuration.ReadFrom.Configuration(context.Configuration); });
+        .UseSerilog();
 
     var app = builder.Build();
-    
+
     app.MapHealthChecks("/health", new HealthCheckOptions
     {
         ResponseWriter = HealthCheckExtensions.WriteResponse
