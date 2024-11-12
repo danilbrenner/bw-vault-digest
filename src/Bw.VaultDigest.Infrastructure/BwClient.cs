@@ -13,7 +13,10 @@ public interface IBwClient
     public Task<IReadOnlyList<Item>> GetItems();
 }
 
-public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient> logger) : IBwClient
+public class BwClient(
+    ISecretManagerClient secretManagerClient,
+    DateTimeProvider dateTimeProvider,
+    ILogger<BwClient> logger) : IBwClient
 {
     public static readonly JsonSerializerOptions SerializeOptions = new()
     {
@@ -40,7 +43,7 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
         logger.LogTrace("Getting items");
 
         var session = await GetSession();
-        
+
         logger.LogTrace("Session received");
 
         var items =
@@ -48,19 +51,19 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
                 EmptyEnvVars.FAdd("BW_SESSION", session),
                 "list",
                 "items");
-        
+
         if (items is null)
             throw new Exception("Failed to get logins");
-        
+
         logger.LogTrace("Got items, {Cnt}", items.Count);
-        
+
         return items;
     }
 
     private async Task<string> Unlock()
     {
         logger.LogTrace("Unlocking the vault");
-        
+
         var password = await secretManagerClient.GetPassword();
         if (password is null) throw new ApplicationException("Could not retrieve master password");
 
@@ -91,18 +94,33 @@ public class BwClient(ISecretManagerClient secretManagerClient, ILogger<BwClient
         return await GetSession();
     }
 
+    private async Task<string> Sync()
+    {
+        logger.LogTrace("Synchronizing vault");
+
+        _ = await Request<string>(EmptyEnvVars, "sync");
+
+        logger.LogTrace("Vault synchronization Succeeded");
+
+        return await GetSession();
+    }
+
     private async Task<string> GetSession()
     {
         logger.LogTrace("Getting session");
-        
+
         var status = await Request<StatusInfo>(EmptyEnvVars, "status");
 
         logger.LogTrace("Got session status {Status}", status.Status);
-        
+
+        var tmp = dateTimeProvider.UtcNow;
+
         return
             status switch
             {
                 { Status: "unauthenticated" } => await Authenticate(),
+                { Status: "locked", LastSync: var lastSync }
+                    when lastSync < dateTimeProvider.UtcNow.AddDays(-1) => await Sync(),
                 { Status: "locked" } => await Unlock(),
                 _ => throw new ApplicationException("Unknown status received")
             };

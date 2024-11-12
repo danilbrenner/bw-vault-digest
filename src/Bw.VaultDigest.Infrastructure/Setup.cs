@@ -16,6 +16,7 @@ public static class Setup
                 .AddTransient<IBwClient, BwClient>()
                 .AddTransient<ILoginProviderAdapter, LoginProviderAdapter>()
                 .AddTransient<IEmailNotifier, EmailNotifier>()
-                .AddTransient<IEmailTemplateLoader, EmailTemplateLoader>();
+                .AddTransient<IEmailTemplateLoader, EmailTemplateLoader>()
+                .AddTransient<DateTimeProvider>();
     }
 }
