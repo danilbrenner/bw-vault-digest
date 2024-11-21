@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Copy the project files and restore dependencies
 COPY src/Bw.VaultDigest.Common/ ./src/Bw.VaultDigest.Common/
+COPY src/Bw.VaultDigest.Telemetry/ ./src/Bw.VaultDigest.Telemetry
 COPY src/Bw.VaultDigest.Infrastructure/ ./src/Bw.VaultDigest.Infrastructure/
 COPY src/Bw.VaultDigest.Model/ ./src/Bw.VaultDigest.Model/
 COPY src/Bw.VaultDigest.Web/ ./src/Bw.VaultDigest.Web/
@@ -30,7 +31,7 @@ RUN apt-get update && \
 RUN npm install -g @bitwarden/cli
 
 # Expose the port on which the app will run
-EXPOSE 80
+EXPOSE 8080
 
 # Set the entry point for the application
 ENTRYPOINT ["dotnet", "Bw.VaultDigest.Web.dll"]

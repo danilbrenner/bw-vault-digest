@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Bw.VaultDigest.Telemetry\Bw.VaultDigest.Telemetry.csproj" />
         <ProjectReference Include="..\Bw.VaultDigest.Infrastructure\Bw.VaultDigest.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Bw.VaultDigest.Telemetry\Bw.VaultDigest.Telemetry.csproj" />
     </ItemGroup>
 
     <ItemGroup>
