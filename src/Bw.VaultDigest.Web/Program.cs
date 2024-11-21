@@ -1,18 +1,21 @@
-using Bw.VaultDigest.Web;
 using Bw.VaultDigest.Infrastructure;
+using Bw.VaultDigest.Web;
+using Bw.VaultDigest.Telemetry;
 using Bw.VaultDigest.Web.Services;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json",
-        true)
-    .Build();
-
 Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(configuration)
+    .WriteTo.Console()
+    .WriteTo.OpenTelemetry(o =>
+    {
+        o.ResourceAttributes = new Dictionary<string, object>
+        {
+            { "service.name", TelemetryConstants.OpenTelemetryServiceName }
+        };
+    })
+    .Enrich.WithMachineName()
+    .Enrich.WithEnvironmentName()
     .CreateLogger();
 
 try
@@ -24,13 +27,16 @@ try
             {
                 svc
                     .AddVaultDigestHealth()
-                    .AddSerilog()
+                    .AddMetrics()
+                    .AddTelemetry()
                     .AddInfrastructure(cfg)
                     .AddTransient<DigestService>()
                     .Configure<Schedule>(cfg.GetSection("Schedule"))
                     .AddHostedService<RepeaterService>();
             });
 
+    builder.Logging.ClearProviders().AddSerilog();
+        
     builder
         .Host
         .UseSerilog();
