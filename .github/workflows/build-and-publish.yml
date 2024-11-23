@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v2
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/sandbox-pub
+          images: ${{ secrets.DOCKER_USERNAME }}/bw-vault-digest
           tags: latest
           labels: true
 
@@ -46,7 +46,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ steps.meta.outputs.tags }},${{ secrets.DOCKER_USERNAME }}/sandbox-pub:latest,${{ secrets.DOCKER_USERNAME }}/sandbox-pub:${{ env.CURRENT_VERSION }}
+          tags: ${{ steps.meta.outputs.tags }},${{ secrets.DOCKER_USERNAME }}/bw-vault-digest:latest,${{ secrets.DOCKER_USERNAME }}/bw-vault-digest:${{ env.CURRENT_VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
 
       - name: Create Git Tag
