@@ -1,9 +1,13 @@
+using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Model;
+using Bw.VaultDigest.Telemetry;
+using Bw.VaultDigest.Web.Requests;
+using MediatR;
 using ScottPlot;
 
-namespace Bw.VaultDigest.Web;
+namespace Bw.VaultDigest.Web.Handlers;
 
-public static class HelperFunctions
+public static class DiagramExtensions
 {
     public static Color ToColor(this Strength strength)
     {
@@ -75,5 +79,32 @@ public static class HelperFunctions
         plt.FigureBackground = new BackgroundStyle { Color = Colors.Transparent };
 
         return plt.GetImageBytes(300, 300, ImageFormat.Png);
+    }
+}
+
+public class SendDigestOutHandler(
+    MetricsFactory metricsFactory,
+    IEmailTemplateLoader templateLoader,
+    IEmailNotifier notifier,
+    ILogger<SendDigestOutHandler> logger) : INotificationHandler<LoginsSyncedEvent>
+{
+    public async Task Handle(LoginsSyncedEvent notification, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Sending digest");
+        using var _ = metricsFactory.CreateDurationMetric("send-digest.duration");
+
+        var template = await templateLoader.RenderMessage(
+            notification.Set.Logins.Count,
+            notification.Set.UserEmail,
+            DateTime.Today);
+
+        await notifier.SendEmail(
+            template,
+            [
+                ("age-diagram", notification.Set.Logins.ToAgeSlices().ToDoughnutDiagram()),
+                ("complexity-diagram", notification.Set.Logins.ToStrengthSlices().ToDoughnutDiagram())
+            ]);
+
+        logger.LogInformation("Digest sent");
     }
 }

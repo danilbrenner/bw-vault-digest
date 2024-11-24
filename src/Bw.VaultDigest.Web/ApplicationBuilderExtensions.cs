@@ -1,6 +1,6 @@
 namespace Bw.VaultDigest.Web;
 
-public static class Configure
+public static class ApplicationBuilderExtensions
 {
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder,
         Action<IConfiguration, IServiceCollection> configure)
