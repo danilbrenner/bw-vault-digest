@@ -1,7 +1,7 @@
 using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Web;
 using Bw.VaultDigest.Telemetry;
-using Bw.VaultDigest.Web.Services;
+using Bw.VaultDigest.Web.HostedServices;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
@@ -30,13 +30,13 @@ try
                     .AddMetrics()
                     .AddTelemetry()
                     .AddInfrastructure(cfg)
-                    .AddTransient<DigestService>()
                     .Configure<Schedule>(cfg.GetSection("Schedule"))
-                    .AddHostedService<RepeaterService>();
+                    .AddHostedService<SyncService>()
+                    .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly));
             });
 
     builder.Logging.ClearProviders().AddSerilog();
-        
+
     builder
         .Host
         .UseSerilog();

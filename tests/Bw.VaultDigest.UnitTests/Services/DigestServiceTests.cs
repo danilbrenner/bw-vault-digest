@@ -1,6 +1,6 @@
 using AutoFixture;
 using Bw.VaultDigest.Model;
-using Bw.VaultDigest.Web;
+using Bw.VaultDigest.Web.Handlers;
 using ScottPlot;
 
 namespace Bw.VaultDigest.UnitTests.Services;
@@ -32,7 +32,7 @@ public class DigestServiceTests
                 .Union(CreateLogins(12, strength: Strength.Strong))
                 .Union(CreateLogins(15, strength: Strength.VeryStrong));
 
-        var result = 
+        var result =
             logins.ToList().ToStrengthSlices();
 
         result.Should().HaveCount(5);
@@ -42,7 +42,7 @@ public class DigestServiceTests
         result.Should().Contain(s => s.FillColor == Colors.LightGreen && s.Value == 12);
         result.Should().Contain(s => s.FillColor == Colors.Green && s.Value == 15);
     }
-    
+
     [Fact]
     public void ToAgesSlices_Spec()
     {
@@ -53,7 +53,7 @@ public class DigestServiceTests
                 .Union(CreateLogins(12, age: Age.Recent))
                 .Union(CreateLogins(15, age: Age.New));
 
-        var result = 
+        var result =
             logins.ToList().ToAgeSlices();
 
         result.Should().HaveCount(5);
