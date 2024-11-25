@@ -1,0 +1,46 @@
+# Ignore build outputs
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs and database files
+*.log
+*.sql
+*.sqlite
+
+# DotNet specific files
+*.pdb
+*.exe
+*.dll
+
+# Dependency directories
+node_modules/
+packages/
+
+# IDE and tool specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Configuration files
+*.config
+*.env
+Properties/launchSettings.json
+
+# Git and version control
+.git/
+.gitignore
+
+# Docker specific files
+.dockerignore
+Dockerfile
+
+# Other unnecessary files
+Thumbs.db
+.DS_Store
