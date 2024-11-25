@@ -1,5 +1,5 @@
-# Use the official .NET SDK image for .NET 8 to build the app
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+ARG TARGETARCH
 WORKDIR /app
 
 # Copy the project files and restore dependencies
@@ -8,13 +8,15 @@ COPY src/Bw.VaultDigest.Telemetry/ ./src/Bw.VaultDigest.Telemetry
 COPY src/Bw.VaultDigest.Infrastructure/ ./src/Bw.VaultDigest.Infrastructure/
 COPY src/Bw.VaultDigest.Model/ ./src/Bw.VaultDigest.Model/
 COPY src/Bw.VaultDigest.Web/ ./src/Bw.VaultDigest.Web/
-RUN dotnet restore src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj
+
+RUN dotnet restore -a $TARGETARCH src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj
 
 # Build the application
-RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -c Release -o /app/out
+RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -a $TARGETARCH -c Release -o /app/out
 
 # Use the official .NET runtime image for .NET 8 to run the app
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+ARG TARGETARCH
 WORKDIR /app
 COPY --from=build /app/out .
 
