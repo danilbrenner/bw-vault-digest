@@ -18,7 +18,7 @@ RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -a $TARGETAR
 FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 ARG TARGETARCH
 WORKDIR /app
-COPY --from=build /app/out .
+COPY --from=base /app/out .
 
 # Install Bitwarden CLI
 RUN apt-get update && \
