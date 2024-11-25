@@ -26,7 +26,7 @@ RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -a $TARGETAR
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /app/out .
 
 # Install Bitwarden CLI
 RUN apt-get update && \
@@ -39,9 +39,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN npm install -g @bitwarden/cli
-
-# Expose the port on which the app will run
-EXPOSE 8080
 
 # Set the entry point for the application
 ENTRYPOINT ["dotnet", "Bw.VaultDigest.Web.dll"]
