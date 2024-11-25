@@ -1,6 +1,12 @@
 FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-ARG TARGETARCH
+USER $APP_UID
 WORKDIR /app
+EXPOSE 8080
+
+FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG TARGETARCH
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
 
 # Copy the project files and restore dependencies
 COPY src/Bw.VaultDigest.Common/ ./src/Bw.VaultDigest.Common/
@@ -11,13 +17,16 @@ COPY src/Bw.VaultDigest.Web/ ./src/Bw.VaultDigest.Web/
 
 RUN dotnet restore -a $TARGETARCH src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj
 
-# Build the application
+RUN dotnet build -a $TARGETARCH -c $BUILD_CONFIGURATION -o /app/build src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj
+
+FROM build AS publish
+ARG TARGETARCH
+ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -a $TARGETARCH -c Release -o /app/out
 
-# Use the official .NET runtime image for .NET 8 to run the app
-FROM --platform=$TARGETPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM base AS final
 WORKDIR /app
-COPY --from=base /app/out .
+COPY --from=publish /app/publish .
 
 # Install Bitwarden CLI
 RUN apt-get update && \
