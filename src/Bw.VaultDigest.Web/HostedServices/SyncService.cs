@@ -1,3 +1,4 @@
+using Bw.VaultDigest.Web.Options;
 using Bw.VaultDigest.Web.Requests;
 using MediatR;
 using Microsoft.Extensions.Options;

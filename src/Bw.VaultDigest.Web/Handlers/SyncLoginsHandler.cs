@@ -1,5 +1,6 @@
 using Bw.VaultDigest.Data.Abstractions;
 using Bw.VaultDigest.Infrastructure;
+using Bw.VaultDigest.Infrastructure.Abstractions;
 using Bw.VaultDigest.Telemetry;
 using Bw.VaultDigest.Web.Requests;
 using MediatR;

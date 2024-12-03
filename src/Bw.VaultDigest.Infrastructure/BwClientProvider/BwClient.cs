@@ -1,17 +1,12 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Bw.VaultDigest.Common;
+using Bw.VaultDigest.Infrastructure.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace Bw.VaultDigest.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure.BwClientProvider;
 
 using EnvVariables = IDictionary<string, string>;
-
-public interface IBwClient
-{
-    public Task<string> GetUserEmail();
-    public Task<IReadOnlyList<Item>> GetItems();
-}
 
 public class BwClient(
     ISecretManagerClient secretManagerClient,

@@ -1,26 +1,12 @@
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using Bw.VaultDigest.Infrastructure.Abstractions;
+using Bw.VaultDigest.Infrastructure.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Bw.VaultDigest.Infrastructure;
-
-public interface IEmailNotifier
-{
-    Task SendEmail(string body, IReadOnlyList<(string, byte[])> images);
-}
-
-public class EmailNotifierOptions
-{
-    public required string From { get; init; }
-    public required string To { get; init; }
-    public required string SmtpServer { get; init; }
-    public required int SmtpPort { get; init; }
-    public required string Username { get; init; }
-    public required string Password { get; init; }
-    public required string DigestTitle { get; init; }
-}
+namespace Bw.VaultDigest.Infrastructure.EmailNotifierClient;
 
 public class EmailNotifier(IOptions<EmailNotifierOptions> emailOptions, ILogger<EmailNotifier> logger) : IEmailNotifier
 {
@@ -33,6 +19,11 @@ public class EmailNotifier(IOptions<EmailNotifierOptions> emailOptions, ILogger<
         image.ContentType = new ContentType("image/png");
 
         return image;
+    }
+
+    public Task SendDigestEmail()
+    {
+        throw new NotImplementedException();
     }
 
     public async Task SendEmail(string body, IReadOnlyList<(string, byte[])> images)

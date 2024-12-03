@@ -1,11 +1,7 @@
+using Bw.VaultDigest.Infrastructure.Abstractions;
 using Bw.VaultDigest.Model;
 
-namespace Bw.VaultDigest.Infrastructure;
-
-public interface ILoginProviderAdapter
-{
-    Task<LoginsSet> GetLogins();
-}
+namespace Bw.VaultDigest.Infrastructure.BwClientProvider;
 
 public class LoginProviderAdapter(IBwClient client) : ILoginProviderAdapter
 {

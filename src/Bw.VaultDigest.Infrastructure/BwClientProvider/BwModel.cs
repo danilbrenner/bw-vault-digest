@@ -1,4 +1,4 @@
-namespace Bw.VaultDigest.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure.BwClientProvider;
 
 public class ApiKeys
 {

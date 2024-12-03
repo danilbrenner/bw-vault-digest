@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Bw.VaultDigest.Infrastructure;
+using Bw.VaultDigest.Infrastructure.BwClientProvider;
 
 namespace Bw.VaultDigest.UnitTests.Infrastructure.BwClientTests;
 

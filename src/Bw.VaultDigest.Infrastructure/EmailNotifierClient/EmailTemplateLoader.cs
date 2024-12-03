@@ -1,20 +1,12 @@
+using Bw.VaultDigest.Infrastructure.Abstractions;
+using Bw.VaultDigest.Infrastructure.Options;
 using DotLiquid;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Bw.VaultDigest.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure.EmailNotifierClient;
 
-public interface IEmailTemplateLoader
-{
-    Task<string> RenderMessage(int loginsCount, string cratedFor, DateTime createdAt);
-}
-
-public class EmailTemplates
-{
-    public required string Statistics { get; init; }
-}
-
-public class EmailTemplateLoader(IOptions<EmailTemplates> options, ILogger<EmailTemplateLoader> logger) :IEmailTemplateLoader
+public class EmailTemplateLoader(IOptions<EmailTemplatesOptions> options, ILogger<EmailTemplateLoader> logger) :IEmailTemplateLoader
 {
     public async Task<string> RenderMessage(int loginsCount, string cratedFor, DateTime createdAt)
     {

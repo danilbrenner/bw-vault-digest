@@ -1,19 +1,10 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Bw.VaultDigest.Infrastructure.Abstractions;
+using Bw.VaultDigest.Infrastructure.Options;
 using Microsoft.Extensions.Options;
 
-namespace Bw.VaultDigest.Infrastructure;
-
-public class SecretManagerOptions
-{
-    public required string VaultUrl { get; init; }
-}
-
-public interface ISecretManagerClient
-{
-    Task<ApiKeys?> GetApiKeys();
-    Task<string?> GetPassword();
-}
+namespace Bw.VaultDigest.Infrastructure.BwClientProvider;
 
 public class AzureSecretManagerClient : ISecretManagerClient
 {

@@ -1,7 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
 using Bw.VaultDigest.Model;
 
-namespace Bw.VaultDigest.Infrastructure;
+namespace Bw.VaultDigest.Infrastructure.BwClientProvider;
 
 public static class Mapping
 {
