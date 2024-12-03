@@ -4,3 +4,4 @@ using MediatR;
 namespace Bw.VaultDigest.Web.Requests;
 
 public record SyncLoginsCommand : IRequest;
+public record SendDigestCommand : IRequest;

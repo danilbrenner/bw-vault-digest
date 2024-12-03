@@ -1,3 +1,4 @@
+using Bw.VaultDigest.Data.Abstractions;
 using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Model;
 using Bw.VaultDigest.Telemetry;
@@ -39,7 +40,7 @@ public static class DiagramExtensions
     {
         return
             logins
-                .GroupBy(l => l.Password.Strength)
+                .GroupBy(l => l.Strength)
                 .Select(g => new PieSlice { FillColor = g.Key.ToColor(), Value = g.Count() })
                 .ToList();
     }
@@ -48,7 +49,7 @@ public static class DiagramExtensions
     {
         return
             logins
-                .GroupBy(l => l.Password.Age)
+                .GroupBy(l => l.Age)
                 .Select(g => new PieSlice { FillColor = g.Key.ToColor(), Value = g.Count() })
                 .ToList();
     }
@@ -86,23 +87,33 @@ public class SendDigestOutHandler(
     MetricsFactory metricsFactory,
     IEmailTemplateLoader templateLoader,
     IEmailNotifier notifier,
-    ILogger<SendDigestOutHandler> logger) : INotificationHandler<LoginsSyncedEvent>
+    ILogger<SendDigestOutHandler> logger,
+    ISyncSetRepository repository) 
+    : IRequestHandler<SendDigestCommand>
 {
-    public async Task Handle(LoginsSyncedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(SendDigestCommand command, CancellationToken cancellationToken)
     {
         logger.LogInformation("Sending digest");
         using var _ = metricsFactory.CreateDurationMetric("send-digest.duration");
+        
+        var set = await repository.GetLatestSyncSet();
 
+        if (set is null)
+        {
+            logger.LogError("No synchronization set was found to create the digest");
+            return;
+        }
+        
         var template = await templateLoader.RenderMessage(
-            notification.Set.Logins.Count,
-            notification.Set.UserEmail,
+            set.Logins.Count,
+            set.UserEmail,
             DateTime.Today);
 
         await notifier.SendEmail(
             template,
             [
-                ("age-diagram", notification.Set.Logins.ToAgeSlices().ToDoughnutDiagram()),
-                ("complexity-diagram", notification.Set.Logins.ToStrengthSlices().ToDoughnutDiagram())
+                ("age-diagram", set.Logins.ToAgeSlices().ToDoughnutDiagram()),
+                ("complexity-diagram", set.Logins.ToStrengthSlices().ToDoughnutDiagram())
             ]);
 
         logger.LogInformation("Digest sent");

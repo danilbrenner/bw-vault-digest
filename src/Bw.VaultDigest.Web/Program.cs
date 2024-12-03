@@ -1,3 +1,4 @@
+using Bw.VaultDigest.Data;
 using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Web;
 using Bw.VaultDigest.Telemetry;
@@ -30,9 +31,10 @@ try
                     .AddMetrics()
                     .AddTelemetry()
                     .AddInfrastructure(cfg)
-                    .Configure<Schedule>(cfg.GetSection("Schedule"))
+                    .Configure<ScheduleOptions>(cfg.GetSection("Schedule"))
                     .AddHostedService<SyncService>()
-                    .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly));
+                    .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly))
+                    .AddData(cfg);
             });
 
     builder.Logging.ClearProviders().AddSerilog();
@@ -42,6 +44,10 @@ try
         .UseSerilog();
 
     var app = builder.Build();
+
+    app
+        .Services
+        .ApplyMigrations();
 
     app.MapHealthChecks("/health", new HealthCheckOptions
     {

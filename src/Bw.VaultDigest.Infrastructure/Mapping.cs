@@ -27,7 +27,7 @@ public static class Mapping
 
     private static Strength GetPasswordStrength(this Item item)
     {
-        char[] symbols = [ '!', '@', '#', '$', '%', '^', '&', '*' ];
+        char[] symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
         var login = item.Login;
         if (login is null)
             return Strength.VeryWeak;
@@ -91,10 +91,9 @@ public static class Mapping
                     new Login(
                         l.Id,
                         l.Name,
-                        new Password(
-                            l.GetPasswordAge(now),
-                            l.GetPasswordStrength()
-                        )))
+                        l.GetPasswordAge(now),
+                        l.GetPasswordStrength()
+                    ))
                 .ToArray();
     }
 }

@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultDigest.Common", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultDigest.Telemetry", "src\Bw.VaultDigest.Telemetry\Bw.VaultDigest.Telemetry.csproj", "{4546C8FC-AFE4-48F5-9411-4BCE66C25EC4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultDigest.Data", "src\Bw.VaultDigest.Data\Bw.VaultDigest.Data.csproj", "{235D5D9F-7D53-4F3F-9593-D990A8661985}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,7 @@ Global
 		{6D2C459F-BE28-423A-BF3E-6E38F3593232} = {A7F1BBFA-3215-4511-AD82-F4A61A8504CB}
 		{14F0BC8A-03D1-4615-A50D-1C7189B3F498} = {A7F1BBFA-3215-4511-AD82-F4A61A8504CB}
 		{4546C8FC-AFE4-48F5-9411-4BCE66C25EC4} = {A7F1BBFA-3215-4511-AD82-F4A61A8504CB}
+		{235D5D9F-7D53-4F3F-9593-D990A8661985} = {A7F1BBFA-3215-4511-AD82-F4A61A8504CB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{50807D46-15B1-43A4-827D-65F0582739B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -54,5 +57,9 @@ Global
 		{4546C8FC-AFE4-48F5-9411-4BCE66C25EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4546C8FC-AFE4-48F5-9411-4BCE66C25EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4546C8FC-AFE4-48F5-9411-4BCE66C25EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{235D5D9F-7D53-4F3F-9593-D990A8661985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{235D5D9F-7D53-4F3F-9593-D990A8661985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{235D5D9F-7D53-4F3F-9593-D990A8661985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{235D5D9F-7D53-4F3F-9593-D990A8661985}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

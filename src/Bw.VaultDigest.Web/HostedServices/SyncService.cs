@@ -5,13 +5,8 @@ using NCrontab;
 
 namespace Bw.VaultDigest.Web.HostedServices;
 
-public class Schedule
-{
-    public required string SyncLogins { get; init; }
-}
-
-public class SyncService(ILogger<SyncService> logger, IOptions<Schedule> options, IMediator mediator)
-    : ScheduledServiceBase(CrontabSchedule.Parse(options.Value.SyncLogins), logger)
+public class SyncService(ILogger<SyncService> logger, IOptions<ScheduleOptions> options, IMediator mediator)
+    : ScheduledServiceBase(CrontabSchedule.Parse(options.Value.SyncLogins), true, logger)
 {
     protected override Task RunAsync(CancellationToken cancellationToken)
         => mediator.Send(new SyncLoginsCommand(), cancellationToken);
