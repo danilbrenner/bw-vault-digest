@@ -1,7 +1,7 @@
 using Bw.VaultDigest.Model;
 using ScottPlot;
 
-namespace Bw.VaultDigest.Web.Handlers;
+namespace Bw.VaultDigest.Infrastructure.EmailNotifierClient;
 
 public static class DiagramExtensions
 {
