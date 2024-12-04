@@ -2,6 +2,8 @@ using AutoFixture;
 using AutoFixture.Xunit2;
 using Bw.VaultDigest.Common;
 using Bw.VaultDigest.Infrastructure;
+using Bw.VaultDigest.Infrastructure.Abstractions;
+using Bw.VaultDigest.Infrastructure.BwClientProvider;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
 

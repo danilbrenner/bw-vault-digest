@@ -2,7 +2,7 @@ namespace Bw.VaultDigest.Web;
 
 public static class ApplicationBuilderExtensions
 {
-    public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder,
+    public static HostApplicationBuilder ConfigureServices(this HostApplicationBuilder builder,
         Action<IConfiguration, IServiceCollection> configure)
     {
         configure(builder.Configuration, builder.Services);

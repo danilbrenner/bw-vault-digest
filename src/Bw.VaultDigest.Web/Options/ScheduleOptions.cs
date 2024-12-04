@@ -1,4 +1,4 @@
-namespace Bw.VaultDigest.Web.HostedServices;
+namespace Bw.VaultDigest.Web.Options;
 
 public class ScheduleOptions
 {

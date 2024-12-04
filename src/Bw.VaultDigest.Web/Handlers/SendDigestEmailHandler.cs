@@ -1,0 +1,38 @@
+using Bw.VaultDigest.Data.Abstractions;
+using Bw.VaultDigest.Infrastructure.Abstractions;
+using Bw.VaultDigest.Telemetry;
+using Bw.VaultDigest.Web.Options;
+using Bw.VaultDigest.Web.Requests;
+using MediatR;
+using Microsoft.Extensions.Options;
+
+namespace Bw.VaultDigest.Web.Handlers;
+
+public class SendDigestEmailHandler(
+    MetricsFactory metricsFactory,
+    IEmailNotifier notifier,
+    IOptions<EmailContentOptions> contentOptions,
+    ILogger<SendDigestEmailHandler> logger,
+    ISyncSetRepository repository)
+    : IRequestHandler<SendDigestCommand>
+{
+    public async Task Handle(SendDigestCommand command, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Sending digest");
+        using var _ = metricsFactory.CreateDurationMetric("send-digest.duration");
+
+        var set = await repository.GetLatestSyncSet();
+
+        if (set is null)
+        {
+            logger.LogError("No synchronization set was found to create the digest email");
+            return;
+        }
+
+        await notifier.SendDigest(set,
+            new SendDigestEmailSettings(
+                contentOptions.Value.To, contentOptions.Value.Title, contentOptions.Value.Template));
+
+        logger.LogInformation("Digest sent");
+    }
+}

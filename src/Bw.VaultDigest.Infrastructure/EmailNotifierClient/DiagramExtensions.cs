@@ -1,12 +1,7 @@
-using Bw.VaultDigest.Data.Abstractions;
-using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Model;
-using Bw.VaultDigest.Telemetry;
-using Bw.VaultDigest.Web.Requests;
-using MediatR;
 using ScottPlot;
 
-namespace Bw.VaultDigest.Web.Handlers;
+namespace Bw.VaultDigest.Infrastructure.EmailNotifierClient;
 
 public static class DiagramExtensions
 {
@@ -80,42 +75,5 @@ public static class DiagramExtensions
         plt.FigureBackground = new BackgroundStyle { Color = Colors.Transparent };
 
         return plt.GetImageBytes(300, 300, ImageFormat.Png);
-    }
-}
-
-public class SendDigestOutHandler(
-    MetricsFactory metricsFactory,
-    IEmailTemplateLoader templateLoader,
-    IEmailNotifier notifier,
-    ILogger<SendDigestOutHandler> logger,
-    ISyncSetRepository repository) 
-    : IRequestHandler<SendDigestCommand>
-{
-    public async Task Handle(SendDigestCommand command, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Sending digest");
-        using var _ = metricsFactory.CreateDurationMetric("send-digest.duration");
-        
-        var set = await repository.GetLatestSyncSet();
-
-        if (set is null)
-        {
-            logger.LogError("No synchronization set was found to create the digest");
-            return;
-        }
-        
-        var template = await templateLoader.RenderMessage(
-            set.Logins.Count,
-            set.UserEmail,
-            DateTime.Today);
-
-        await notifier.SendEmail(
-            template,
-            [
-                ("age-diagram", set.Logins.ToAgeSlices().ToDoughnutDiagram()),
-                ("complexity-diagram", set.Logins.ToStrengthSlices().ToDoughnutDiagram())
-            ]);
-
-        logger.LogInformation("Digest sent");
     }
 }

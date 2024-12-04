@@ -1,9 +1,9 @@
 using Bw.VaultDigest.Data;
 using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Web;
+using Bw.VaultDigest.Web.Options;
 using Bw.VaultDigest.Telemetry;
 using Bw.VaultDigest.Web.HostedServices;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -22,16 +22,16 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder =
-        WebApplication
-            .CreateBuilder(args)
+        Host.CreateApplicationBuilder(args)
             .ConfigureServices((cfg, svc) =>
             {
                 svc
-                    .AddVaultDigestHealth()
                     .AddMetrics()
                     .AddTelemetry()
                     .AddInfrastructure(cfg)
                     .Configure<ScheduleOptions>(cfg.GetSection("Schedule"))
+                    .Configure<EmailContentOptions>(cfg.GetSection("EmailDigest:EmailContent"))
+                    .AddHostedService<SendDigestService>()
                     .AddHostedService<SyncService>()
                     .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly))
                     .AddData(cfg);
@@ -39,21 +39,12 @@ try
 
     builder.Logging.ClearProviders().AddSerilog();
 
-    builder
-        .Host
-        .UseSerilog();
-
     var app = builder.Build();
 
     app
         .Services
         .ApplyMigrations();
-
-    app.MapHealthChecks("/health", new HealthCheckOptions
-    {
-        ResponseWriter = HealthCheckExtensions.WriteResponse
-    });
-
+    
     app.Run();
 }
 catch (Exception exception)
