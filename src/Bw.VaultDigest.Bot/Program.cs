@@ -1,9 +1,9 @@
 using Bw.VaultDigest.Data;
 using Bw.VaultDigest.Infrastructure;
-using Bw.VaultDigest.Web;
-using Bw.VaultDigest.Web.Options;
+using Bw.VaultDigest.Bot;
+using Bw.VaultDigest.Bot.Options;
 using Bw.VaultDigest.Telemetry;
-using Bw.VaultDigest.Web.HostedServices;
+using Bw.VaultDigest.Bot.HostedServices;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

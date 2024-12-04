@@ -1,12 +1,12 @@
+using Bw.VaultDigest.Bot.Options;
+using Bw.VaultDigest.Bot.Requests;
 using Bw.VaultDigest.Data.Abstractions;
 using Bw.VaultDigest.Infrastructure.Abstractions;
 using Bw.VaultDigest.Telemetry;
-using Bw.VaultDigest.Web.Options;
-using Bw.VaultDigest.Web.Requests;
 using MediatR;
 using Microsoft.Extensions.Options;
 
-namespace Bw.VaultDigest.Web.Handlers;
+namespace Bw.VaultDigest.Bot.Handlers;
 
 public class SendDigestEmailHandler(
     MetricsFactory metricsFactory,
