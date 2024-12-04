@@ -1,3 +1,4 @@
+
 namespace Bw.VaultDigest.Model;
 
 public enum Age
@@ -18,8 +19,6 @@ public enum Strength
     VeryStrong = 4
 }
 
-public record Password(Age Age, Strength Strength);
+public record Login(Guid Id, string Name, Age Age, Strength Strength);
 
-public record Login(Guid Id, string Name, Password Password);
-
-public record LoginsSet(string UserEmail, IReadOnlyList<Login> Logins);
+public record LoginsSet(Guid Id, string UserEmail, DateTime Timestamp, IReadOnlyList<Login> Logins);

@@ -220,7 +220,7 @@ public class LoginsMappingTests
         logins.Should().HaveCount(1);
         logins[0].Id.Should().Be(item.Id);
         logins[0].Name.Should().Be(item.Name);
-        logins[0].Password.Strength.Should().Be(expectedStrength);
+        logins[0].Strength.Should().Be(expectedStrength);
     }
 
     private class AgeCalculationData : TheoryData<Age, DateTime, DateTime>
@@ -261,6 +261,6 @@ public class LoginsMappingTests
         logins.Should().HaveCount(1);
         logins[0].Id.Should().Be(item.Id);
         logins[0].Name.Should().Be(item.Name);
-        logins[0].Password.Age.Should().Be(expectedAge);
+        logins[0].Age.Should().Be(expectedAge);
     }
 }

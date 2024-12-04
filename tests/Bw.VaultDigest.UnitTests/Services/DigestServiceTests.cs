@@ -13,12 +13,8 @@ public class DigestServiceTests
     {
         return _fixture
             .Build<Login>()
-            .With(l => l.Password,
-                _fixture
-                    .Build<Password>()
-                    .With(p => p.Strength, strength)
-                    .With(p => p.Age, age)
-                    .Create())
+            .With(p => p.Strength, strength)
+            .With(p => p.Age, age)
             .CreateMany(count);
     }
 

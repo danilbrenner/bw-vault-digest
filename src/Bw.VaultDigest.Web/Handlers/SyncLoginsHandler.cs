@@ -1,5 +1,5 @@
+using Bw.VaultDigest.Data.Abstractions;
 using Bw.VaultDigest.Infrastructure;
-using Bw.VaultDigest.Model;
 using Bw.VaultDigest.Telemetry;
 using Bw.VaultDigest.Web.Requests;
 using MediatR;
@@ -7,22 +7,20 @@ using MediatR;
 namespace Bw.VaultDigest.Web.Handlers;
 
 public class SyncLoginsHandler(
-    IMediator mediator,
     ILogger<SyncLoginsHandler> logger,
     MetricsFactory metricsFactory,
-    ILoginProviderAdapter adapter)
+    ILoginProviderAdapter adapter,
+    ISyncSetRepository repository)
     : IRequestHandler<SyncLoginsCommand>
 {
     public async Task Handle(SyncLoginsCommand request, CancellationToken cancellationToken)
     {
         logger.LogInformation("SyncLoginsHandler started");
-        LoginsSet? set;
-        using (metricsFactory.CreateDurationMetric("sync-logins.duration"))
-        {
-            set = await adapter.GetLogins();
-        }
+        using var _ = metricsFactory.CreateDurationMetric("sync-logins.duration");
 
-        await mediator.Publish(new LoginsSyncedEvent(set), cancellationToken);
+        var set = await adapter.GetLogins();
+        await repository.AddSyncSet(set);
+        
         logger.LogInformation("SyncLoginsHandler completed");
     }
 }
