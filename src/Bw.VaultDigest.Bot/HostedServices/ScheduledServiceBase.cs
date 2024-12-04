@@ -1,6 +1,6 @@
 using NCrontab;
 
-namespace Bw.VaultDigest.Web.HostedServices;
+namespace Bw.VaultDigest.Bot.HostedServices;
 
 public abstract class ScheduledServiceBase(CrontabSchedule cron, bool skipOnStartup, ILogger logger) : BackgroundService
 {

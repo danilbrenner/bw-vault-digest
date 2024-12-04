@@ -4,7 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7F1BBFA-321
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FBEA0FE3-3679-47B8-BAC0-F8EB6C89C207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultDigest.Web", "src\Bw.VaultDigest.Web\Bw.VaultDigest.Web.csproj", "{50807D46-15B1-43A4-827D-65F0582739B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultDigest.Bot", "src\Bw.VaultDigest.Bot\Bw.VaultDigest.Bot.csproj", "{50807D46-15B1-43A4-827D-65F0582739B5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultDigest.UnitTests", "tests\Bw.VaultDigest.UnitTests\Bw.VaultDigest.UnitTests.csproj", "{7A62018F-0504-43A3-B24E-4C8188E1A3A4}"
 EndProject

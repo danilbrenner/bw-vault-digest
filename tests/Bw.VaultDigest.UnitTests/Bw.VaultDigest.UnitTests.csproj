@@ -29,7 +29,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Bw.VaultDigest.Common\Bw.VaultDigest.Common.csproj"/>
         <ProjectReference Include="..\..\src\Bw.VaultDigest.Infrastructure\Bw.VaultDigest.Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\src\Bw.VaultDigest.Web\Bw.VaultDigest.Web.csproj" />
+        <ProjectReference Include="..\..\src\Bw.VaultDigest.Bot\Bw.VaultDigest.Bot.csproj" />
     </ItemGroup>
 
 </Project>

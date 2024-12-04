@@ -1,4 +1,4 @@
-namespace Bw.VaultDigest.Web.Options;
+namespace Bw.VaultDigest.Bot.Options;
 
 public class ScheduleOptions
 {

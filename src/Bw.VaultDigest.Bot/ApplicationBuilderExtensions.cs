@@ -1,4 +1,4 @@
-namespace Bw.VaultDigest.Web;
+namespace Bw.VaultDigest.Bot;
 
 public static class ApplicationBuilderExtensions
 {
