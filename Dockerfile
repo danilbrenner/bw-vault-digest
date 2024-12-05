@@ -7,12 +7,13 @@ COPY src/Bw.VaultDigest.Common/ ./src/Bw.VaultDigest.Common/
 COPY src/Bw.VaultDigest.Telemetry/ ./src/Bw.VaultDigest.Telemetry
 COPY src/Bw.VaultDigest.Infrastructure/ ./src/Bw.VaultDigest.Infrastructure/
 COPY src/Bw.VaultDigest.Model/ ./src/Bw.VaultDigest.Model/
-COPY src/Bw.VaultDigest.Web/ ./src/Bw.VaultDigest.Web/
+COPY src/Bw.VaultDigest.Data/ ./src/Bw.VaultDigest.Data/
+COPY src/Bw.VaultDigest.Bot/ ./src/Bw.VaultDigest.Bot/
 
-RUN dotnet restore src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj
+RUN dotnet restore src/Bw.VaultDigest.Bot/Bw.VaultDigest.Bot.csproj
 
 # Build the application
-RUN dotnet publish src/Bw.VaultDigest.Web/Bw.VaultDigest.Web.csproj -c Release -o /app/out
+RUN dotnet publish src/Bw.VaultDigest.Bot/Bw.VaultDigest.Bot.csproj -c Release -o /app/out
 
 # Use the official .NET runtime image for .NET 8 to run the app
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
@@ -35,4 +36,4 @@ RUN npm install -g @bitwarden/cli
 EXPOSE 8080
 
 # Set the entry point for the application
-ENTRYPOINT ["dotnet", "Bw.VaultDigest.Web.dll"]
+ENTRYPOINT ["dotnet", "Bw.VaultDigest.Bot.dll"]
