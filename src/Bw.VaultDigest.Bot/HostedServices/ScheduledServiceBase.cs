@@ -13,7 +13,7 @@ public abstract class ScheduledServiceBase(CrontabSchedule cron, bool skipOnStar
         while (!stoppingToken.IsCancellationRequested)
         {
             logger.LogInformation("{ScheduledServiceType}: Is active", GetType().Name);
-            if(_next is null && !skipOnStartup)
+            if(_next is not null || !skipOnStartup)
                 await RunAsync(stoppingToken);
             _next = cron.GetNextOccurrence(DateTime.Now);
             logger.LogInformation("{ScheduledServiceType}: Scheduling next run for {Next}", GetType().Name, _next.Value);
