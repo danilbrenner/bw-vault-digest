@@ -1,9 +1,11 @@
 using Bw.VaultDigest.Data;
 using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Bot;
+using Bw.VaultDigest.Bot.Behaviors;
 using Bw.VaultDigest.Bot.Options;
 using Bw.VaultDigest.Telemetry;
 using Bw.VaultDigest.Bot.HostedServices;
+using MediatR;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -33,6 +35,7 @@ try
                     .Configure<EmailContentOptions>(cfg.GetSection("EmailDigest:EmailContent"))
                     .AddHostedService<SendDigestService>()
                     .AddHostedService<SyncService>()
+                    .AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>))
                     .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly))
                     .AddData(cfg);
             });

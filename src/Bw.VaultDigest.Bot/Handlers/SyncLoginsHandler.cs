@@ -12,9 +12,9 @@ public class SyncLoginsHandler(
     MetricsFactory metricsFactory,
     ILoginProviderAdapter adapter,
     ISyncSetRepository repository)
-    : IRequestHandler<SyncLoginsCommand>
+    : IRequestHandler<SyncLoginsCommand, Unit>
 {
-    public async Task Handle(SyncLoginsCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SyncLoginsCommand request, CancellationToken cancellationToken)
     {
         logger.LogInformation("SyncLoginsHandler started");
         using var _ = metricsFactory.CreateDurationMetric("sync-logins.duration");
@@ -23,5 +23,6 @@ public class SyncLoginsHandler(
         await repository.AddSyncSet(set);
         
         logger.LogInformation("SyncLoginsHandler completed");
+        return Unit.Value;
     }
 }
