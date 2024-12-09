@@ -26,7 +26,7 @@ public class SendDigestEmailHandler(
         if (set is null)
         {
             logger.LogError("No synchronization set was found to create the digest email");
-            return;
+            return Unit.Value;
         }
 
         await notifier.SendDigest(set,
