@@ -10,6 +10,12 @@ public static class Extensions
         dictionary.Add(key, value);
         return dictionary;
     }
+    
+    public static List<T> FAdd<T>(this List<T> list, T value)
+    {
+        list.Add(value);
+        return list;
+    }
 
     public static T ToEnum<T>(this int i) where T : struct, IConvertible
     {

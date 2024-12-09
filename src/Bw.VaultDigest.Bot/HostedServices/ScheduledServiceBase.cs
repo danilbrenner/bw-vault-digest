@@ -14,7 +14,14 @@ public abstract class ScheduledServiceBase(CrontabSchedule cron, bool skipOnStar
         {
             logger.LogInformation("{ScheduledServiceType}: Is active", GetType().Name);
             if(_next is not null || !skipOnStartup)
-                await RunAsync(stoppingToken);
+                try
+                {
+                    await RunAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Error while running scheduled service {Type}", GetType().Name);
+                }
             _next = cron.GetNextOccurrence(DateTime.Now);
             logger.LogInformation("{ScheduledServiceType}: Scheduling next run for {Next}", GetType().Name, _next.Value);
             await Task.Delay(_next.Value - DateTime.Now, stoppingToken);

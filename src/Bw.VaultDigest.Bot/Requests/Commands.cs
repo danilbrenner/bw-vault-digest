@@ -3,5 +3,5 @@ using MediatR;
 
 namespace Bw.VaultDigest.Bot.Requests;
 
-public record SyncLoginsCommand : IRequest;
-public record SendDigestCommand : IRequest;
+public record SyncLoginsCommand : IRequest<Unit>;
+public record SendDigestCommand : IRequest<Unit>;

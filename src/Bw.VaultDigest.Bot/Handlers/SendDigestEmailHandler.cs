@@ -14,9 +14,9 @@ public class SendDigestEmailHandler(
     IOptions<EmailContentOptions> contentOptions,
     ILogger<SendDigestEmailHandler> logger,
     ISyncSetRepository repository)
-    : IRequestHandler<SendDigestCommand>
+    : IRequestHandler<SendDigestCommand, Unit>
 {
-    public async Task Handle(SendDigestCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendDigestCommand command, CancellationToken cancellationToken)
     {
         logger.LogInformation("Sending digest");
         using var _ = metricsFactory.CreateDurationMetric("send-digest.duration");
@@ -34,5 +34,6 @@ public class SendDigestEmailHandler(
                 contentOptions.Value.To, contentOptions.Value.Title, contentOptions.Value.Template));
 
         logger.LogInformation("Digest sent");
+        return Unit.Value;
     }
 }
