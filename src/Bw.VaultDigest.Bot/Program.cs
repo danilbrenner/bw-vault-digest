@@ -1,11 +1,10 @@
+using Bw.VaultDigest.Application;
 using Bw.VaultDigest.Data;
 using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Bot;
-using Bw.VaultDigest.Bot.Behaviors;
 using Bw.VaultDigest.Bot.Options;
 using Bw.VaultDigest.Telemetry;
 using Bw.VaultDigest.Bot.HostedServices;
-using MediatR;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -23,6 +22,8 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
+    var cancellationTokenSource = new CancellationTokenSource();
+
     var builder =
         Host.CreateApplicationBuilder(args)
             .ConfigureServices((cfg, svc) =>
@@ -32,11 +33,9 @@ try
                     .AddTelemetry()
                     .AddInfrastructure(cfg)
                     .Configure<ScheduleOptions>(cfg.GetSection("Schedule"))
-                    .Configure<EmailContentOptions>(cfg.GetSection("EmailDigest:EmailContent"))
                     .AddHostedService<SendDigestService>()
                     .AddHostedService<SyncService>()
-                    .AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>))
-                    .AddMediatR(config => config.RegisterServicesFromAssembly(typeof(Program).Assembly))
+                    .AddApplication(cfg, cancellationTokenSource.Token)
                     .AddData(cfg);
             });
 
@@ -46,8 +45,14 @@ try
 
     app
         .Services
-        .ApplyMigrations();
-    
+        .ApplyMigrations()
+        .UseBot(cancellationTokenSource.Token);
+
+    app
+        .Services
+        .GetRequiredService<IHostApplicationLifetime>()
+        .ApplicationStopping.Register(() => cancellationTokenSource.Cancel());
+
     app.Run();
 }
 catch (Exception exception)

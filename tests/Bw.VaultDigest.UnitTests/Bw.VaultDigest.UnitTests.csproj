@@ -32,4 +32,8 @@
         <ProjectReference Include="..\..\src\Bw.VaultDigest.Bot\Bw.VaultDigest.Bot.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Handlers\" />
+    </ItemGroup>
+
 </Project>

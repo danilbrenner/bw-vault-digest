@@ -28,7 +28,8 @@ public static class Setup
                 connection.Open();
                 return connection;
             })
-            .AddTransient<ISyncSetRepository, SyncSetRepository>();
+            .AddTransient<ISyncSetRepository, SyncSetRepository>()
+            .AddTransient<IAdminChatRepository, AdminChatRepository>();
     }
 
     public static IServiceProvider ApplyMigrations(this IServiceProvider sp)

@@ -1,4 +1,4 @@
-namespace Bw.VaultDigest.Bot.Options;
+namespace Bw.VaultDigest.Application.Options;
 
 public class EmailContentOptions
 {

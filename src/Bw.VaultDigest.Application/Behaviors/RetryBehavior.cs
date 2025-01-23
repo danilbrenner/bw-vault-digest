@@ -1,7 +1,8 @@
 using Bw.VaultDigest.Common;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace Bw.VaultDigest.Bot.Behaviors;
+namespace Bw.VaultDigest.Application.Behaviors;
 
 public class RetryBehavior<TRequest, TResponse>(ILogger<RetryBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
