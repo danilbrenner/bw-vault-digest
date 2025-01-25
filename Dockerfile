@@ -3,12 +3,13 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project files and restore dependencies
+COPY src/Bw.VaultDigest.Application/ ./src/Bw.VaultDigest.Application/
+COPY src/Bw.VaultDigest.Bot/ ./src/Bw.VaultDigest.Bot/
 COPY src/Bw.VaultDigest.Common/ ./src/Bw.VaultDigest.Common/
-COPY src/Bw.VaultDigest.Telemetry/ ./src/Bw.VaultDigest.Telemetry
+COPY src/Bw.VaultDigest.Data/ ./src/Bw.VaultDigest.Data/
 COPY src/Bw.VaultDigest.Infrastructure/ ./src/Bw.VaultDigest.Infrastructure/
 COPY src/Bw.VaultDigest.Model/ ./src/Bw.VaultDigest.Model/
-COPY src/Bw.VaultDigest.Data/ ./src/Bw.VaultDigest.Data/
-COPY src/Bw.VaultDigest.Bot/ ./src/Bw.VaultDigest.Bot/
+COPY src/Bw.VaultDigest.Telemetry/ ./src/Bw.VaultDigest.Telemetry
 
 RUN dotnet restore src/Bw.VaultDigest.Bot/Bw.VaultDigest.Bot.csproj
 
