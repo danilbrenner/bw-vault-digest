@@ -25,7 +25,6 @@ public static class Setup
         CancellationToken stoppingToken)
     {
         return services
-            .Configure<EmailContentOptions>(configuration.GetSection("EmailDigest:EmailContent"))
             .Configure<AdminOptions>(configuration.GetSection("Admin"))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>))
             .AddTransient<IPipelineBehavior<TelegramUpdateRequest, Unit>, AuthChatBehaviour>()

@@ -24,10 +24,4 @@
         <PackageReference Include="Telegram.Bot" Version="22.2.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Update="assets\statistics.liquid">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
 </Project>

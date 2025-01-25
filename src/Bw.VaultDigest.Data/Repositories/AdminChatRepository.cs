@@ -7,6 +7,13 @@ namespace Bw.VaultDigest.Data.Repositories;
 
 public class AdminChatRepository(IDbConnection connection) : IAdminChatRepository
 {
+    public async Task<IReadOnlyList<AdminChat>> GetAdminChats()
+    {
+        var result = await connection.QueryAsync<AdminChat>(
+            "select chat_id as ChatId, username as Username, phone_nr as PhoneNr from admin_chats;");
+        return result.ToList();
+    }
+
     public async Task<AdminChat?> GetAdminChatById(long id)
     {
         return await connection.QueryFirstOrDefaultAsync<AdminChat>(
