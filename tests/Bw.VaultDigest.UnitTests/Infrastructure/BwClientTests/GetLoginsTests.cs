@@ -1,4 +1,3 @@
-using AutoFixture;
 using AutoFixture.Xunit2;
 using Bw.VaultDigest.Common;
 using Bw.VaultDigest.Infrastructure;

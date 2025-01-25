@@ -1,11 +1,11 @@
-using Bw.VaultDigest.Bot.Requests;
+using Bw.VaultDigest.Application.Requests;
 using Bw.VaultDigest.Data.Abstractions;
-using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Infrastructure.Abstractions;
 using Bw.VaultDigest.Telemetry;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace Bw.VaultDigest.Bot.Handlers;
+namespace Bw.VaultDigest.Application.Handlers;
 
 public class SyncLoginsHandler(
     ILogger<SyncLoginsHandler> logger,

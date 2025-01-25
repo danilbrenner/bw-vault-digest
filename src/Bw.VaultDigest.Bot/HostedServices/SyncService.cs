@@ -1,5 +1,5 @@
+using Bw.VaultDigest.Application.Requests;
 using Bw.VaultDigest.Bot.Options;
-using Bw.VaultDigest.Bot.Requests;
 using MediatR;
 using Microsoft.Extensions.Options;
 using NCrontab;

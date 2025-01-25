@@ -1,6 +1,3 @@
-using System.Text;
-using AutoFixture;
-using Bw.VaultDigest.Infrastructure;
 using Bw.VaultDigest.Infrastructure.BwClientProvider;
 using Bw.VaultDigest.Model;
 

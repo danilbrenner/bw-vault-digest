@@ -53,27 +53,16 @@ public static class DiagramExtensions
     {
         var plt = new Plot();
         var pie = plt.Add.Pie(slices);
-        pie.DonutFraction = .6;
-
-        // Hide axis label and tick
-        plt.Axes.Bottom.TickLabelStyle.IsVisible = false;
-        plt.Axes.Bottom.MajorTickStyle.Length = 0;
-        plt.Axes.Bottom.MinorTickStyle.Length = 0;
-
-        // Hide axis label and tick
-        plt.Axes.Left.TickLabelStyle.IsVisible = false;
-        plt.Axes.Left.MajorTickStyle.Length = 0;
-        plt.Axes.Left.MinorTickStyle.Length = 0;
-
-        // Hide axis edge line
-        plt.Axes.Bottom.FrameLineStyle.Width = 0;
-        plt.Axes.Right.FrameLineStyle.Width = 0;
-        plt.Axes.Top.FrameLineStyle.Width = 0;
-        plt.Axes.Left.FrameLineStyle.Width = 0;
-
+        pie.DonutFraction = .2;
+        pie.SliceLabelDistance = 0;
+        pie.Padding = -1;
+        pie.ExplodeFraction = 0;
+        
+        plt.Layout.Fixed(new PixelPadding(0));
+        
         plt.Grid.IsVisible = false;
         plt.FigureBackground = new BackgroundStyle { Color = Colors.Transparent };
-
+        
         return plt.GetImageBytes(300, 300, ImageFormat.Png);
     }
 }

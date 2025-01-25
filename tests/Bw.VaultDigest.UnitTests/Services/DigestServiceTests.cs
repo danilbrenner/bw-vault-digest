@@ -1,7 +1,5 @@
-using AutoFixture;
 using Bw.VaultDigest.Infrastructure.EmailNotifierClient;
 using Bw.VaultDigest.Model;
-using Bw.VaultDigest.Bot.Handlers;
 using ScottPlot;
 
 namespace Bw.VaultDigest.UnitTests.Services;

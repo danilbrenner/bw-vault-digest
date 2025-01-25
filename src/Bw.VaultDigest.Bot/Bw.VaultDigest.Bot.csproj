@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Bw.VaultDigest.Application\Bw.VaultDigest.Application.csproj" />
         <ProjectReference Include="..\Bw.VaultDigest.Data\Bw.VaultDigest.Data.csproj" />
         <ProjectReference Include="..\Bw.VaultDigest.Infrastructure\Bw.VaultDigest.Infrastructure.csproj"/>
         <ProjectReference Include="..\Bw.VaultDigest.Telemetry\Bw.VaultDigest.Telemetry.csproj" />
@@ -20,12 +21,7 @@
         <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
         <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.1.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="assets\statistics.liquid">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <PackageReference Include="Telegram.Bot" Version="22.2.0" />
     </ItemGroup>
 
 </Project>
