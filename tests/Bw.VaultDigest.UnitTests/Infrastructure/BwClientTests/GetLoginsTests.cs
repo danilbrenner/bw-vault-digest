@@ -149,7 +149,7 @@ public class GetLoginsTests
         VerifyLoginCalled(keys.ClientId, keys.ClientSecret, Times.Once());
         VerifyUnlockCalled(password, Times.Once());
         VerifyGetLoginsCalled(sessionToken, Times.Once());
-        logins.Should().BeEquivalentTo(items);
+        logins.ShouldBeEquivalentTo(items);
     }
 
     [Theory]
@@ -171,7 +171,7 @@ public class GetLoginsTests
         VerifyLoginNotCalled();
         VerifyUnlockCalled(password, Times.Once());
         VerifyGetLoginsCalled(sessionToken, Times.Once());
-        logins.Should().BeEquivalentTo(items);
+        logins.ShouldBeEquivalentTo(items);
     }
 
     [Theory]
@@ -192,9 +192,7 @@ public class GetLoginsTests
         Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
-            .Should()
-            .ThrowAsync<Exception>()
-            .WithMessage("Failed to get logins");
+            .ShouldThrowAsync<Exception>("Failed to get logins");
 
         VerifyLoginNotCalled();
         VerifyUnlockCalled(password, Times.Once());
@@ -215,9 +213,7 @@ public class GetLoginsTests
         Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
-            .Should()
-            .ThrowAsync<Exception>()
-            .WithMessage("Could not retrieve master password");
+            .ShouldThrowAsync<Exception>("Could not retrieve master password");
 
         VerifyLoginNotCalled();
         VerifyUnlockCalled(It.IsAny<string>(), Times.Never());
@@ -236,9 +232,7 @@ public class GetLoginsTests
         Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
-            .Should()
-            .ThrowAsync<Exception>()
-            .WithMessage("Could not retrieve Api Keys to login");
+            .ShouldThrowAsync<Exception>("Could not retrieve Api Keys to login");
 
         VerifyLoginNotCalled();
         VerifyUnlockCalled(It.IsAny<string>(), Times.Never());
@@ -257,9 +251,7 @@ public class GetLoginsTests
         Func<Task> act = () => _bwClientMock.Object.GetItems();
 
         await act
-            .Should()
-            .ThrowAsync<Exception>()
-            .WithMessage("Unknown status received");
+            .ShouldThrowAsync<Exception>("Unknown status received");
 
         VerifyLoginNotCalled();
         VerifyUnlockCalled(It.IsAny<string>(), Times.Never());
@@ -291,6 +283,6 @@ public class GetLoginsTests
             .Verify(c => c.Request<string>(EmptyEnvVars, "sync"), Times.Once());
         VerifyUnlockCalled(password, Times.Once());
         VerifyGetLoginsCalled(sessionToken, Times.Once());
-        logins.Should().BeEquivalentTo(items);
+        logins.ShouldBeEquivalentTo(items);
     }
 }

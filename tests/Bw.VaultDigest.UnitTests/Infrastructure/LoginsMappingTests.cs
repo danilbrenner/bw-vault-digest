@@ -113,8 +113,9 @@ public class LoginsMappingTests
 
         var logins = items.ToLogins(DateTime.Now);
 
-        logins.Should().HaveCount(loginItems.Length);
-        logins.Should().OnlyContain(l => loginItems.Any(li => li.Id == l.Id));
+        logins.Count.ShouldBe(loginItems.Length);
+        logins.ShouldContain(l => loginItems.Any(li => li.Id == l.Id));
+        logins.ShouldNotContain(l => loginItems.All(li => li.Id != l.Id));
     }
 
     private class StrengthCalculationData : TheoryData<Strength, string>
@@ -215,10 +216,10 @@ public class LoginsMappingTests
 
         var logins = items.ToLogins(_fixture.Create<DateTime>());
 
-        logins.Should().HaveCount(1);
-        logins[0].Id.Should().Be(item.Id);
-        logins[0].Name.Should().Be(item.Name);
-        logins[0].Strength.Should().Be(expectedStrength);
+        logins.Count.ShouldBe(1);
+        logins[0].Id.ShouldBe(item.Id);
+        logins[0].Name.ShouldBe(item.Name);
+        logins[0].Strength.ShouldBe(expectedStrength);
     }
 
     private class AgeCalculationData : TheoryData<Age, DateTime, DateTime>
@@ -256,9 +257,9 @@ public class LoginsMappingTests
 
         var logins = items.ToLogins(now);
 
-        logins.Should().HaveCount(1);
-        logins[0].Id.Should().Be(item.Id);
-        logins[0].Name.Should().Be(item.Name);
-        logins[0].Age.Should().Be(expectedAge);
+        logins.Count.ShouldBe(1);
+        logins[0].Id.ShouldBe(item.Id);
+        logins[0].Name.ShouldBe(item.Name);
+        logins[0].Age.ShouldBe(expectedAge);
     }
 }
