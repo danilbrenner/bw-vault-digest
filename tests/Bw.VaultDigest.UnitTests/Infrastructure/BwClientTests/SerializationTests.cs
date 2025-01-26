@@ -194,6 +194,6 @@ public class SerializationTests
                            ]
                            """;
         var obj = JsonSerializer.Deserialize<IEnumerable<Item>>(str, BwClient.SerializeOptions);
-        obj.Should().NotBeNull();
+        obj.ShouldNotBeNull();
     }
 }

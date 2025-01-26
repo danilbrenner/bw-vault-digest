@@ -30,12 +30,12 @@ public class DigestServiceTests
         var result =
             logins.ToList().ToStrengthSlices();
 
-        result.Should().HaveCount(5);
-        result.Should().Contain(s => s.FillColor == Colors.Red && s.Value == 5);
-        result.Should().Contain(s => s.FillColor == Colors.Orange && s.Value == 7);
-        result.Should().Contain(s => s.FillColor == Colors.Yellow && s.Value == 9);
-        result.Should().Contain(s => s.FillColor == Colors.LightGreen && s.Value == 12);
-        result.Should().Contain(s => s.FillColor == Colors.Green && s.Value == 15);
+        result.Count.ShouldBe(5);
+        result.ShouldContain(s => s.FillColor == Colors.Red && s.Value == 5);
+        result.ShouldContain(s => s.FillColor == Colors.Orange && s.Value == 7);
+        result.ShouldContain(s => s.FillColor == Colors.Yellow && s.Value == 9);
+        result.ShouldContain(s => s.FillColor == Colors.LightGreen && s.Value == 12);
+        result.ShouldContain(s => s.FillColor == Colors.Green && s.Value == 15);
     }
 
     [Fact]
@@ -51,11 +51,11 @@ public class DigestServiceTests
         var result =
             logins.ToList().ToAgeSlices();
 
-        result.Should().HaveCount(5);
-        result.Should().Contain(s => s.FillColor == Colors.Red && s.Value == 5);
-        result.Should().Contain(s => s.FillColor == Colors.Orange && s.Value == 7);
-        result.Should().Contain(s => s.FillColor == Colors.Yellow && s.Value == 9);
-        result.Should().Contain(s => s.FillColor == Colors.LightGreen && s.Value == 12);
-        result.Should().Contain(s => s.FillColor == Colors.Green && s.Value == 15);
+        result.Count.ShouldBe(5);
+        result.ShouldContain(s => s.FillColor == Colors.Red && s.Value == 5);
+        result.ShouldContain(s => s.FillColor == Colors.Orange && s.Value == 7);
+        result.ShouldContain(s => s.FillColor == Colors.Yellow && s.Value == 9);
+        result.ShouldContain(s => s.FillColor == Colors.LightGreen && s.Value == 12);
+        result.ShouldContain(s => s.FillColor == Colors.Green && s.Value == 15);
     }
 }
