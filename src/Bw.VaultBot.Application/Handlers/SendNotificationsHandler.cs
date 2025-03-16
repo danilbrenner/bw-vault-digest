@@ -35,9 +35,9 @@ public class SendNotificationsHandler(
                 chatId, "Strength", cancellationToken: cancellationToken);
             await bot.SendSticker(
                 chatId, InputFile.FromStream(new MemoryStream(strength)), cancellationToken: cancellationToken);
-            await bot.SendSticker(
+            await bot.SendMessage(
                 chatId, "Age", cancellationToken: cancellationToken);
-            var e = await bot.SendSticker(
+            await bot.SendSticker(
                 chatId, InputFile.FromStream(new MemoryStream(age)), cancellationToken: cancellationToken);
         }
     }
@@ -70,6 +70,8 @@ public class SendNotificationsHandler(
             return await SendStatistics(set, [request.ChatId], cancellationToken).ToUnit();
         
         logger.LogError("No synchronization set was found to create the digest email");
+        await bot.SendMessage(
+            request.ChatId, "Logins were not synchronized. Please synchronize and try again.", cancellationToken: cancellationToken);
         return Unit.Value;
     }
 }

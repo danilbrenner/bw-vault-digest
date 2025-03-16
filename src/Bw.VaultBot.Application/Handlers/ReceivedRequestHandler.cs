@@ -21,6 +21,10 @@ public class ReceivedRequestHandler(ITelegramBotClient bot, IMediator mediator)
                 mediator
                     .Send(new SendStatisticsToChatCommand(request.Message.Chat.Id), cancellationToken)
                     .ToUnit(),
+            MessageType.Text when request.Message.Text == "/sync" =>
+                mediator
+                    .Send(new SyncLoginsCommand(), cancellationToken)
+                    .ToUnit(),
             _ => Task.FromResult(Unit.Value)
         };
     }
