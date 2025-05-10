@@ -8,10 +8,10 @@ namespace Bw.VaultBot.Data.Repositories;
 
 public class SyncSetRepository(IDbConnection connection) : ISyncSetRepository
 {
-    private Login ToLogin((Guid, string, int, int) loginParts)
+    private static Login ToLogin((Guid, string, string?, int, int) loginParts)
     {
-        var (loginId, name, strength, age) = loginParts;
-        return new Login(loginId, name, age.ToEnum<Age>(), strength.ToEnum<Strength>());
+        var (loginId, name, userName, strength, age) = loginParts;
+        return new Login(loginId, name, userName, age.ToEnum<Age>(), strength.ToEnum<Strength>());
     }
 
     private LoginsSet ToLoginsSet((Guid, string, DateTime) setParts)
@@ -26,7 +26,7 @@ public class SyncSetRepository(IDbConnection connection) : ISyncSetRepository
 
         _ = await connection.QueryAsync<
             (Guid, string, DateTime),
-            (Guid, string, int, int),
+            (Guid, string, string?, int, int),
             LoginsSet>(
             """
                 with events as (
@@ -34,7 +34,7 @@ public class SyncSetRepository(IDbConnection connection) : ISyncSetRepository
                     from sync_events
                     order by timestamp desc limit 1
                 )
-                select e.sync_id, e.email, e.timestamp, l.login_id, l.name, l.strength, l.age
+                select e.sync_id, e.email, e.timestamp, l.login_id, l.name, null as user_name, l.strength, l.age
                 from logins l
                 inner join events e where e.sync_id = l.sync_id;
             """,
@@ -69,8 +69,8 @@ public class SyncSetRepository(IDbConnection connection) : ISyncSetRepository
         {
             await connection
                 .ExecuteAsync(
-                    "insert into logins(login_id, sync_id, name, strength, age) values (@Id, @SyncId, @Name, @Strength, @Age);",
-                    new { SyncId = syncSet.Id, login.Id, login.Name, login.Strength, login.Age },
+                    "insert into logins(login_id, sync_id, name, user_name, strength, age) values (@Id, @SyncId, @Name, @UserName, @Strength, @Age);",
+                    new { SyncId = syncSet.Id, login.Id, login.Name, login.UserName, login.Strength, login.Age },
                     transaction);
         }
 
