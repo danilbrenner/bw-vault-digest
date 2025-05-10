@@ -90,6 +90,7 @@ public static class Mapping
                     new Login(
                         l.Id,
                         l.Name,
+                        l.Login?.Username,
                         l.GetPasswordAge(now),
                         l.GetPasswordStrength()
                     ))

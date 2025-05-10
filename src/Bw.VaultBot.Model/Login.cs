@@ -19,6 +19,6 @@ public enum Strength
     VeryStrong = 4
 }
 
-public record Login(Guid Id, string Name, Age Age, Strength Strength);
+public record Login(Guid Id, string Name, string? UserName, Age Age, Strength Strength);
 
 public record LoginsSet(Guid Id, string UserEmail, DateTime Timestamp, IReadOnlyList<Login> Logins);
