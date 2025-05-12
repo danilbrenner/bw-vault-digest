@@ -3,18 +3,18 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy the project files and restore dependencies
-COPY src/Bw.VaultDigest.Application/ ./src/Bw.VaultDigest.Application/
-COPY src/Bw.VaultDigest.Bot/ ./src/Bw.VaultDigest.Bot/
-COPY src/Bw.VaultDigest.Common/ ./src/Bw.VaultDigest.Common/
-COPY src/Bw.VaultDigest.Data/ ./src/Bw.VaultDigest.Data/
-COPY src/Bw.VaultDigest.Infrastructure/ ./src/Bw.VaultDigest.Infrastructure/
-COPY src/Bw.VaultDigest.Model/ ./src/Bw.VaultDigest.Model/
-COPY src/Bw.VaultDigest.Telemetry/ ./src/Bw.VaultDigest.Telemetry
+COPY src/Bw.VaultBot.Application/ ./src/Bw.VaultBot.Application/
+COPY src/Bw.VaultBot/ ./src/Bw.VaultBot/
+COPY src/Bw.VaultBot.Common/ ./src/Bw.VaultBot.Common/
+COPY src/Bw.VaultBot.Data/ ./src/Bw.VaultBot.Data/
+COPY src/Bw.VaultBot.Infrastructure/ ./src/Bw.VaultBot.Infrastructure/
+COPY src/Bw.VaultBot.Model/ ./src/Bw.VaultBot.Model/
+COPY src/Bw.VaultBot.Telemetry/ ./src/Bw.VaultBot.Telemetry/
 
-RUN dotnet restore src/Bw.VaultDigest.Bot/Bw.VaultDigest.Bot.csproj
+RUN dotnet restore src/Bw.VaultBot/Bw.VaultBot.csproj
 
 # Build the application
-RUN dotnet publish src/Bw.VaultDigest.Bot/Bw.VaultDigest.Bot.csproj -c Release -o /app/out
+RUN dotnet publish src/Bw.VaultBot/Bw.VaultBot.csproj -c Release -o /app/out
 
 # Use the official .NET runtime image for .NET 8 to run the app
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
@@ -37,4 +37,4 @@ RUN npm install -g @bitwarden/cli
 EXPOSE 8080
 
 # Set the entry point for the application
-ENTRYPOINT ["dotnet", "Bw.VaultDigest.Bot.dll"]
+ENTRYPOINT ["dotnet", "Bw.VaultBot.dll"]
