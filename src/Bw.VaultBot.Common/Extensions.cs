@@ -1,4 +1,3 @@
-using MediatR;
 
 namespace Bw.VaultBot.Common;
 
@@ -33,11 +32,5 @@ public static class Extensions
         var wList = list.ToList();
         wList.Add(item);
         return wList;
-    }
-    
-    public static async Task<Unit> ToUnit(this Task task)
-    {
-        await task;
-        return Unit.Value;
     }
 }

@@ -33,8 +33,4 @@
         <ProjectReference Include="..\..\src\Bw.VaultBot\Bw.VaultBot.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Handlers\" />
-    </ItemGroup>
-
 </Project>

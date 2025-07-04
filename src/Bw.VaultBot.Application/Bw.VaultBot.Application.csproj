@@ -7,15 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.4.1" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
-      <PackageReference Include="Telegram.Bot" Version="22.2.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Bw.VaultBot.Data\Bw.VaultBot.Data.csproj" />
       <ProjectReference Include="..\Bw.VaultBot.Infrastructure\Bw.VaultBot.Infrastructure.csproj" />
-      <ProjectReference Include="..\Bw.VaultBot.Telemetry\Bw.VaultBot.Telemetry.csproj" />
     </ItemGroup>
 
 </Project>
