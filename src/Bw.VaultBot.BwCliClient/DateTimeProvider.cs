@@ -1,4 +1,4 @@
-namespace Bw.VaultBot.Infrastructure;
+namespace Bw.VaultBot.BwCliClient;
 
 public class DateTimeProvider
 {

@@ -1,6 +1,6 @@
 using Bw.VaultBot.Model;
 
-namespace Bw.VaultBot.Infrastructure.BwClientProvider;
+namespace Bw.VaultBot.BwCliClient.BwClientProvider;
 
 public static class Mapping
 {

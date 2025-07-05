@@ -1,6 +1,6 @@
-using Bw.VaultBot.Infrastructure.BwClientProvider;
+using Bw.VaultBot.BwCliClient.BwClientProvider;
 
-namespace Bw.VaultBot.Infrastructure.Abstractions;
+namespace Bw.VaultBot.BwCliClient.Abstractions;
 
 public interface IBwClient
 {

@@ -1,7 +1,7 @@
-using Bw.VaultBot.Infrastructure.Abstractions;
+using Bw.VaultBot.BwCliClient.Abstractions;
 using Bw.VaultBot.Model;
 
-namespace Bw.VaultBot.Infrastructure.BwClientProvider;
+namespace Bw.VaultBot.BwCliClient.BwClientProvider;
 
 public class LoginProviderAdapter(IBwClient client) : ILoginProviderAdapter
 {

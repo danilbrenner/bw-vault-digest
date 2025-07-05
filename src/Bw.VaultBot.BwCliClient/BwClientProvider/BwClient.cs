@@ -1,10 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json;
-using Bw.VaultBot.Common;
-using Bw.VaultBot.Infrastructure.Abstractions;
+using Bw.VaultBot.BwCliClient.Abstractions;
 using Microsoft.Extensions.Logging;
 
-namespace Bw.VaultBot.Infrastructure.BwClientProvider;
+namespace Bw.VaultBot.BwCliClient.BwClientProvider;
 
 using EnvVariables = IDictionary<string, string>;
 

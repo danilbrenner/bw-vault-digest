@@ -1,4 +1,4 @@
-namespace Bw.VaultBot.Infrastructure.Options;
+namespace Bw.VaultBot.BwCliClient.Options;
 
 public class SecretManagerOptions
 {

@@ -1,4 +1,4 @@
-using Bw.VaultBot.Infrastructure.EmailNotifierClient;
+using Bw.VaultBot.BwCliClient.EmailNotifierClient;
 using Bw.VaultBot.Model;
 using ScottPlot;
 

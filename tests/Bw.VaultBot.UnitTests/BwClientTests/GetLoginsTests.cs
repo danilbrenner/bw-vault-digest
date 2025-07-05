@@ -1,12 +1,11 @@
 using AutoFixture.Xunit2;
-using Bw.VaultBot.Common;
-using Bw.VaultBot.Infrastructure;
-using Bw.VaultBot.Infrastructure.Abstractions;
-using Bw.VaultBot.Infrastructure.BwClientProvider;
+using Bw.VaultBot.BwCliClient;
+using Bw.VaultBot.BwCliClient.Abstractions;
+using Bw.VaultBot.BwCliClient.BwClientProvider;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
 
-namespace Bw.VaultBot.UnitTests.Infrastructure.BwClientTests;
+namespace Bw.VaultBot.UnitTests.BwClientTests;
 
 using EnvVariables = IDictionary<string, string>;
 

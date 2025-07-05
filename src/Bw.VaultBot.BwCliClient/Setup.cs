@@ -1,11 +1,11 @@
-﻿using Bw.VaultBot.Infrastructure.Abstractions;
-using Bw.VaultBot.Infrastructure.BwClientProvider;
-using Bw.VaultBot.Infrastructure.Options;
-using Bw.VaultBot.Infrastructure.EmailNotifierClient;
+﻿using Bw.VaultBot.BwCliClient.Abstractions;
+using Bw.VaultBot.BwCliClient.BwClientProvider;
+using Bw.VaultBot.BwCliClient.Options;
+using Bw.VaultBot.BwCliClient.EmailNotifierClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bw.VaultBot.Infrastructure;
+namespace Bw.VaultBot.BwCliClient;
 
 public static class Setup
 {

@@ -28,8 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Bw.VaultBot.Common\Bw.VaultBot.Common.csproj" />
-        <ProjectReference Include="..\..\src\Bw.VaultBot.Infrastructure\Bw.VaultBot.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\src\Bw.VaultBot.BwCliClient\Bw.VaultBot.BwCliClient.csproj" />
         <ProjectReference Include="..\..\src\Bw.VaultBot\Bw.VaultBot.csproj" />
     </ItemGroup>
 

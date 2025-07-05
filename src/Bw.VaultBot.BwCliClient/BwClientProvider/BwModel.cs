@@ -1,4 +1,4 @@
-namespace Bw.VaultBot.Infrastructure.BwClientProvider;
+namespace Bw.VaultBot.BwCliClient.BwClientProvider;
 
 public class ApiKeys
 {

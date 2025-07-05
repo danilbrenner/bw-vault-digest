@@ -1,4 +1,4 @@
-using Bw.VaultBot.Infrastructure;
+using Bw.VaultBot.BwCliClient;
 using Bw.VaultBot;
 using Bw.VaultBot.Options;
 using Bw.VaultBot.HostedServices;

@@ -1,7 +1,7 @@
 using Bw.VaultBot.Model;
 using ScottPlot;
 
-namespace Bw.VaultBot.Infrastructure.EmailNotifierClient;
+namespace Bw.VaultBot.BwCliClient.EmailNotifierClient;
 
 public static class DiagramExtensions
 {

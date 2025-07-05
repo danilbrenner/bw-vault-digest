@@ -1,7 +1,7 @@
 using System.Text.Json;
-using Bw.VaultBot.Infrastructure.BwClientProvider;
+using Bw.VaultBot.BwCliClient.BwClientProvider;
 
-namespace Bw.VaultBot.UnitTests.Infrastructure.BwClientTests;
+namespace Bw.VaultBot.UnitTests.BwClientTests;
 
 public class SerializationTests
 {

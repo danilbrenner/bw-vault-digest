@@ -1,7 +1,7 @@
-using Bw.VaultBot.Infrastructure.BwClientProvider;
+using Bw.VaultBot.BwCliClient.BwClientProvider;
 using Bw.VaultBot.Model;
 
-namespace Bw.VaultBot.UnitTests.Infrastructure;
+namespace Bw.VaultBot.UnitTests;
 
 public class LoginsMappingTests
 {

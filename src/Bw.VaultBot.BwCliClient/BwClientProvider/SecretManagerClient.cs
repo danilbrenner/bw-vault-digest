@@ -1,10 +1,10 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
-using Bw.VaultBot.Infrastructure.Abstractions;
-using Bw.VaultBot.Infrastructure.Options;
+using Bw.VaultBot.BwCliClient.Abstractions;
+using Bw.VaultBot.BwCliClient.Options;
 using Microsoft.Extensions.Options;
 
-namespace Bw.VaultBot.Infrastructure.BwClientProvider;
+namespace Bw.VaultBot.BwCliClient.BwClientProvider;
 
 public class AzureSecretManagerClient : ISecretManagerClient
 {
