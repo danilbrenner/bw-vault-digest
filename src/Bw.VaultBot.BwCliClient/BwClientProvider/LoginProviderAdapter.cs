@@ -9,6 +9,6 @@ public class LoginProviderAdapter(IBwClient client) : ILoginProviderAdapter
     {
         var userEmail = await client.GetUserEmail();
         var logins = await client.GetItems();
-        return new LoginsSet(Guid.NewGuid(), userEmail, DateTime.Now, logins.ToLogins(DateTime.Today));
+        return new LoginsSet(Guid.NewGuid(), userEmail, DateTime.Now, logins.ToLogins());
     }
 }

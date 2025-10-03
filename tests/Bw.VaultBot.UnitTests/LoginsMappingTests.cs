@@ -48,7 +48,7 @@ public class LoginsMappingTests
             starters += GetRandomCharacter(symbols);
         }
 
-        var passwordChars = 
+        var passwordChars =
             Enumerable.Range(0, length - starters.Length)
                 .Select(_ => allChars[Random.Next(allChars.Length)])
                 .Concat(starters.ToCharArray())
@@ -111,7 +111,7 @@ public class LoginsMappingTests
                     .CreateMany())
                 .ToList();
 
-        var logins = items.ToLogins(DateTime.Now);
+        var logins = items.ToLogins();
 
         logins.Count.ShouldBe(loginItems.Length);
         logins.ShouldContain(l => loginItems.Any(li => li.Id == l.Id));
@@ -214,34 +214,19 @@ public class LoginsMappingTests
 
         IReadOnlyList<Item> items = [item];
 
-        var logins = items.ToLogins(_fixture.Create<DateTime>());
+        var logins = items.ToLogins();
 
         logins.Count.ShouldBe(1);
         logins[0].Id.ShouldBe(item.Id);
         logins[0].Name.ShouldBe(item.Name);
+        logins[0].Username.ShouldBe(item.Login?.Username);
         logins[0].Strength.ShouldBe(expectedStrength);
     }
 
-    private class AgeCalculationData : TheoryData<Age, DateTime, DateTime>
+    [Fact]
+    public void LoginMapping_AgeCalculation()
     {
-        public AgeCalculationData()
-        {
-            var now = new Fixture().Create<DateTime>();
-            Add(Age.New, now.AddMonths(-1), now);
-            Add(Age.Recent, now.AddMonths(-1).AddDays(-1), now);
-            Add(Age.Recent, now.AddMonths(-3), now);
-            Add(Age.Moderate, now.AddMonths(-3).AddDays(-1), now);
-            Add(Age.Moderate, now.AddMonths(-6), now);
-            Add(Age.Old, now.AddMonths(-6).AddDays(-1), now);
-            Add(Age.Old, now.AddMonths(-12), now);
-            Add(Age.Ancient, now.AddMonths(-12).AddDays(-1), now);
-        }
-    }
-
-    [Theory]
-    [ClassData(typeof(AgeCalculationData))]
-    public void LoginMapping_AgeCalculation(Age expectedAge, DateTime date, DateTime now)
-    {
+        var date = _fixture.Create<DateTime>();
         var item = _fixture
             .Build<Item>()
             .With(l => l.Type, CipherType.Login)
@@ -255,11 +240,12 @@ public class LoginsMappingTests
 
         IReadOnlyList<Item> items = [item];
 
-        var logins = items.ToLogins(now);
+        var logins = items.ToLogins();
 
         logins.Count.ShouldBe(1);
         logins[0].Id.ShouldBe(item.Id);
         logins[0].Name.ShouldBe(item.Name);
-        logins[0].Age.ShouldBe(expectedAge);
+        logins[0].Username.ShouldBe(item.Login?.Username);
+        logins[0].ChangedAt.ShouldBe(date);
     }
 }

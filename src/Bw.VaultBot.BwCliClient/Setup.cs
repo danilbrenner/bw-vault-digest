@@ -1,7 +1,6 @@
 ﻿using Bw.VaultBot.BwCliClient.Abstractions;
 using Bw.VaultBot.BwCliClient.BwClientProvider;
 using Bw.VaultBot.BwCliClient.Options;
-using Bw.VaultBot.BwCliClient.EmailNotifierClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

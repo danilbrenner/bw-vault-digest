@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Bw.VaultBot.BwCliClient.Abstractions;
+using Bw.VaultBot.BwCliClient.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Bw.VaultBot.BwCliClient.BwClientProvider;

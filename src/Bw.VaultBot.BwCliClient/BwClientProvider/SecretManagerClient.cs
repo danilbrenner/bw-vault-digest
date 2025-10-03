@@ -1,6 +1,7 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Bw.VaultBot.BwCliClient.Abstractions;
+using Bw.VaultBot.BwCliClient.Models;
 using Bw.VaultBot.BwCliClient.Options;
 using Microsoft.Extensions.Options;
 
@@ -28,7 +29,7 @@ public class AzureSecretManagerClient : ISecretManagerClient
         var clientId = await client.GetSecretAsync("bw-clientid");
         var clientSecret = await client.GetSecretAsync("bw-clientsecret");
         if (clientId.HasValue && clientSecret.HasValue)
-            return new ApiKeys { ClientId = clientId.Value.Value, ClientSecret = clientSecret.Value.Value };
+            return new ApiKeys(clientId.Value.Value, clientSecret.Value.Value);
         return null;
     }
 

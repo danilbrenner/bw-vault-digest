@@ -1,3 +1,4 @@
+using Bw.VaultBot.BwCliClient.Models;
 using Bw.VaultBot.Model;
 
 namespace Bw.VaultBot.BwCliClient.BwClientProvider;
@@ -9,19 +10,6 @@ public static class Mapping
         var monthDiff = (lValue.Year - rValue.Year) * 12 + lValue.Month - rValue.Month;
         var dayDiff = (lValue.Day - rValue.Day) / (double)DateTime.DaysInMonth(rValue.Year, rValue.Month);
         return monthDiff + dayDiff;
-    }
-
-    private static Age GetPasswordAge(this Item item, DateTime now)
-    {
-        return item.Login?.PasswordRevisionDate?.Date.MonthDifference(now.Date) switch
-        {
-            null => Age.Ancient,
-            >= -1 => Age.New,
-            >= -3 => Age.Recent,
-            >= -6 => Age.Moderate,
-            >= -12 => Age.Old,
-            _ => Age.Ancient
-        };
     }
 
     private static Strength GetPasswordStrength(this Item item)
@@ -81,7 +69,7 @@ public static class Mapping
             };
     }
 
-    public static IReadOnlyList<Login> ToLogins(this IReadOnlyList<Item> logins, DateTime now)
+    public static IReadOnlyList<Login> ToLogins(this IReadOnlyList<Item> logins)
     {
         return
             logins
@@ -91,7 +79,7 @@ public static class Mapping
                         l.Id,
                         l.Name,
                         l.Login?.Username,
-                        l.GetPasswordAge(now),
+                        l.Login?.PasswordRevisionDate ?? l.CreationDate,
                         l.GetPasswordStrength()
                     ))
                 .ToArray();

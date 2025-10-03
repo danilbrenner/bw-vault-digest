@@ -2,6 +2,8 @@ using AutoFixture.Xunit2;
 using Bw.VaultBot.BwCliClient;
 using Bw.VaultBot.BwCliClient.Abstractions;
 using Bw.VaultBot.BwCliClient.BwClientProvider;
+using Bw.VaultBot.BwCliClient.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
 

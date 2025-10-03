@@ -1,11 +1,5 @@
 namespace Bw.VaultBot.BwCliClient.BwClientProvider;
 
-public class ApiKeys
-{
-    public required string ClientId { get; init; }
-    public required string ClientSecret { get; init; }
-}
-
 public class StatusInfo
 {
     public string? UserEmail { get; set; }
