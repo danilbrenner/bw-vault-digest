@@ -1,8 +1,11 @@
 using Bw.VaultBot.BwCliClient;
 using Bw.VaultBot.Options;
-using Bw.VaultBot.HostedServices;
+using Bw.VaultBot.Filters;
+using Bw.VaultBot.Data;
+using Bw.VaultBot.Jobs;
 using Serilog;
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
 
@@ -20,27 +23,29 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var cancellationTokenSource = new CancellationTokenSource();
+    var connectionString = configuration.GetConnectionString("HangfireConnection");
 
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.ConfigureServices((cfg, svc) =>
     {
         svc
+            .AddAuthorizationFilter(connectionString!)
             .AddInfrastructure(cfg.Configuration)
             .Configure<ScheduleOptions>(cfg.Configuration.GetSection("Schedule"))
             .AddHangfire(x => x
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
-                .UseSqlServerStorage(cfg.Configuration.GetConnectionString("HangfireConnection"), new SqlServerStorageOptions
+                .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
                 {
                     CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
                     SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
                     QueuePollInterval = TimeSpan.Zero,
                     UseRecommendedIsolationLevel = true,
                     DisableGlobalLocks = true
-                }));
-        svc.AddHangfireServer();
-        svc.AddScoped<SyncService>();
+                }))
+            .AddHangfireServer()
+            .AddHangfireJobs();
     });
     builder.Logging.ClearProviders();
     builder.Logging.AddSerilog();
@@ -49,9 +54,18 @@ try
 
     app.Lifetime.ApplicationStopping.Register(() => cancellationTokenSource.Cancel());
 
-    app.UseHangfireDashboard();
-
-    RecurringJob.AddOrUpdate<SyncService>("sync-service-execute", job => job.Execute(), Cron.Daily);
+    app
+        .MigrateDashboardUsers(connectionString!)
+        .UseHangfireDashboard("/hangfire", new DashboardOptions
+        {
+            DashboardTitle = "Vault Sync",
+            DarkModeEnabled = true,
+            AsyncAuthorization =
+            [
+                app.Services.GetRequiredService<IDashboardAsyncAuthorizationFilter>()
+            ]
+        })
+        .UseHangfireJobs();
 
     app.Run();
 }

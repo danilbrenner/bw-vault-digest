@@ -1,15 +1,11 @@
 using System.Globalization;
 using System.Text;
-using Azure.Storage.Blobs;
-using Bw.VaultBot.BwCliClient.Abstractions;
 using Bw.VaultBot.Model;
-using Bw.VaultBot.Options;
 using CsvHelper;
-using Microsoft.Extensions.Options;
 
-namespace Bw.VaultBot.HostedServices;
+namespace Bw.VaultBot.Jobs;
 
-public class SyncService(ILogger<SyncService> logger)
+public class ExportLoginsJob(ILogger<ExportLoginsJob> logger)
 {
     public async Task Execute()
     {
@@ -53,7 +49,7 @@ public class SyncService(ILogger<SyncService> logger)
     protected async Task RunAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting sync service");
-        await Task.Delay(10, cancellationToken);
+        await Task.Delay(30000, cancellationToken);
         
         // var logins = await
         //     TryAsync(loginProvider.GetLogins)
