@@ -1,5 +1,5 @@
 
-namespace Bw.VaultBot.UnitTests
+namespace Bw.Sync.UnitTests
 {
     public static class One
     {

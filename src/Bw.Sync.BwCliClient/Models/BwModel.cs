@@ -1,4 +1,4 @@
-namespace Bw.Sync.BwCliClient.BwClientProvider;
+namespace Bw.Sync.BwCliClient.Models;
 
 public class StatusInfo
 {

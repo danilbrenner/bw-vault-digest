@@ -1,7 +1,7 @@
 using Bw.Sync.BwCliClient.BwClientProvider;
-using Bw.VaultBot.Model;
+using Bw.Sync.BwCliClient.Models;
 
-namespace Bw.VaultBot.UnitTests;
+namespace Bw.Sync.UnitTests;
 
 public class LoginsMappingTests
 {

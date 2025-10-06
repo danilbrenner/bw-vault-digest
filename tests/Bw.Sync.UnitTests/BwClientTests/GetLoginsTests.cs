@@ -6,7 +6,7 @@ using Bw.Sync.BwCliClient.Models;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
 
-namespace Bw.VaultBot.UnitTests.BwClientTests;
+namespace Bw.Sync.UnitTests.BwClientTests;
 
 using EnvVariables = IDictionary<string, string>;
 

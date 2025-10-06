@@ -1,5 +1,5 @@
 
-namespace Bw.VaultBot.Model;
+namespace Bw.Sync.BwCliClient.Models;
 
 public enum Strength
 {

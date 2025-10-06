@@ -1,6 +1,5 @@
 using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.Models;
-using Bw.VaultBot.Model;
 
 namespace Bw.Sync.BwCliClient.BwClientProvider;
 

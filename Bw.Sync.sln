@@ -4,7 +4,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A7F1BBFA-321
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{FBEA0FE3-3679-47B8-BAC0-F8EB6C89C207}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultBot.UnitTests", "tests\Bw.VaultBot.UnitTests\Bw.VaultBot.UnitTests.csproj", "{7A62018F-0504-43A3-B24E-4C8188E1A3A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.Sync.UnitTests", "tests\Bw.Sync.UnitTests\Bw.Sync.UnitTests.csproj", "{7A62018F-0504-43A3-B24E-4C8188E1A3A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.Sync.BwCliClient", "src\Bw.Sync.BwCliClient\Bw.Sync.BwCliClient.csproj", "{6D2C459F-BE28-423A-BF3E-6E38F3593232}"
 EndProject
