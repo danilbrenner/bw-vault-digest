@@ -29,7 +29,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\src\Bw.Sync.BwCliClient\Bw.Sync.BwCliClient.csproj" />
-        <ProjectReference Include="..\..\src\Bw.VaultBot\Bw.VaultBot.csproj" />
     </ItemGroup>
 
 </Project>

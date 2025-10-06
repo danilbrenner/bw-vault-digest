@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.Models;
@@ -9,7 +10,6 @@ namespace Bw.Sync.BwCliClient.BwClientProvider;
 using EnvVariables = IDictionary<string, string>;
 
 public class BwClient(
-    ISecretsProvider secretsProvider,
     DateTimeProvider dateTimeProvider,
     ILogger<BwClient> logger) : IBwClient
 {
@@ -21,23 +21,23 @@ public class BwClient(
 
     private static EnvVariables EmptyEnvVars => new Dictionary<string, string>();
 
-    public async Task<string> GetUserEmail()
+    public async Task<string> GetUserEmail(ICredentials credentials)
     {
-        var status = await Request<StatusInfo>(EmptyEnvVars, "status");
+        var status = await Request<StatusInfo>(EmptyEnvVars, "status", []);
         return
             status switch
             {
-                { Status: "unauthenticated" } => await Authenticate(),
+                { Status: "unauthenticated" } => await Authenticate(credentials),
                 { UserEmail: null } => throw new ApplicationException("Could not get user email"),
                 _ => status.UserEmail
             };
     }
 
-    public async Task<IReadOnlyList<Item>> GetItems()
+    public async Task<IReadOnlyList<Item>> GetItems(ICredentials credentials)
     {
         logger.LogTrace("Getting items");
 
-        var session = await GetSession();
+        var session = await GetSession(credentials);
 
         logger.LogTrace("Session received");
 
@@ -45,6 +45,7 @@ public class BwClient(
             await Request<IReadOnlyList<Item>>(
                 EmptyEnvVars.FAdd("BW_SESSION", session),
                 "list",
+                [],
                 "items");
 
         if (items is null)
@@ -55,73 +56,65 @@ public class BwClient(
         return items;
     }
 
-    private async Task<string> Unlock()
+    private async Task<string> Unlock(ICredentials credentials)
     {
         logger.LogTrace("Unlocking the vault");
-
-        var password = await secretsProvider.GetPassword();
-        if (password is null) throw new ApplicationException("Could not retrieve master password");
-
+        
         return await Request<string>(
-            EmptyEnvVars.FAdd("BW_PASSWORD", password),
+            EmptyEnvVars,
             "unlock",
-            "--passwordenv",
-            "BW_PASSWORD", "--raw");
+            credentials.Password,
+            "--raw");
     }
 
-    private async Task<string> Authenticate()
+    private async Task<string> Authenticate(ICredentials credentials)
     {
         logger.LogTrace("Authenticating vault");
-
-        var apiKeys = await secretsProvider.GetApiKeys();
-
-        if (apiKeys is null) throw new ApplicationException("Could not retrieve Api Keys to login");
-
+        
         _ = await Request<string>(
             EmptyEnvVars
-                .FAdd("BW_CLIENTID", apiKeys.ClientId)
-                .FAdd("BW_CLIENTSECRET", apiKeys.ClientSecret),
+                .FAdd("BW_CLIENTID", credentials.ApiKeys.ClientId)
+                .FAdd("BW_CLIENTSECRET", credentials.ApiKeys.ClientSecret),
             "login",
+            [],
             "--apikey");
 
         logger.LogTrace("Vault authentication Succeeded");
 
-        return await GetSession();
+        return await GetSession(credentials);
     }
 
-    private async Task<string> Sync()
+    private async Task<string> Sync(ICredentials credentials)
     {
         logger.LogTrace("Synchronizing vault");
 
-        _ = await Request<string>(EmptyEnvVars, "sync");
+        _ = await Request<string>(EmptyEnvVars, "sync", []);
 
         logger.LogTrace("Vault synchronization Succeeded");
 
-        return await GetSession();
+        return await GetSession(credentials);
     }
 
-    private async Task<string> GetSession()
+    private async Task<string> GetSession(ICredentials credentials)
     {
         logger.LogTrace("Getting session");
 
-        var status = await Request<StatusInfo>(EmptyEnvVars, "status");
+        var status = await Request<StatusInfo>(EmptyEnvVars, "status", []);
 
         logger.LogTrace("Got session status {Status}", status.Status);
-
-        var tmp = dateTimeProvider.UtcNow;
 
         return
             status switch
             {
-                { Status: "unauthenticated" } => await Authenticate(),
+                { Status: "unauthenticated" } => await Authenticate(credentials),
                 { Status: "locked", LastSync: var lastSync }
-                    when lastSync < dateTimeProvider.UtcNow.AddDays(-1) => await Sync(),
-                { Status: "locked" } => await Unlock(),
+                    when lastSync < dateTimeProvider.UtcNow.AddDays(-1) => await Sync(credentials),
+                { Status: "locked" } => await Unlock(credentials),
                 _ => throw new ApplicationException("Unknown status received")
             };
     }
 
-    protected virtual async Task<T> Request<T>(EnvVariables envVariables, string command, params string[] options)
+    protected virtual async Task<T> Request<T>(EnvVariables envVariables, string command, byte[] stdIn, params string[] options)
     {
         using var process = new Process();
         process.StartInfo.FileName = "bw";
@@ -136,7 +129,14 @@ public class BwClient(
         process.StartInfo.RedirectStandardError = true;
 
         process.Start();
-
+        
+        if(stdIn is { Length: > 0 })
+        {
+            await process.StandardInput.BaseStream.WriteAsync(stdIn);
+            await process.StandardInput.BaseStream.FlushAsync();
+            process.StandardInput.Close();
+        }
+        
         var outputAwaiter = process.StandardOutput.ReadToEndAsync();
         var errOutAwaiter = process.StandardError.ReadToEndAsync();
 

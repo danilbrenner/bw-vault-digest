@@ -3,7 +3,6 @@ using Bw.Sync.BwCliClient;
 using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.BwClientProvider;
 using Bw.Sync.BwCliClient.Models;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
 
@@ -13,7 +12,7 @@ using EnvVariables = IDictionary<string, string>;
 
 public interface ITest
 {
-    public Task<T> Request<T>(EnvVariables envVariables, string command, params string[] options);
+    public Task<T> Request<T>(EnvVariables envVariables, string command, byte[] stdIn, params string[] options);
 }
 
 public class GetLoginsTests
@@ -23,12 +22,10 @@ public class GetLoginsTests
     private readonly Mock<DateTimeProvider> _dateTimeProviderMock = new();
 
     private readonly Fixture _fixture = new();
-    private readonly Mock<ISecretsProvider> _secretsProviderMock = new();
 
     public GetLoginsTests()
     {
         _bwClientMock = new Mock<BwClient>(
-            _secretsProviderMock.Object,
             _dateTimeProviderMock.Object,
             NullLogger<BwClient>.Instance);
     }
@@ -45,20 +42,22 @@ public class GetLoginsTests
                             .FAdd("BW_CLIENTID", clientId)
                             .FAdd("BW_CLIENTSECRET", clientSecret),
                         "login",
+                        Array.Empty<byte>(),
                         "--apikey"))
             .ReturnsAsync("");
     }
 
-    private void SetupUnlock(string password, string sessionToken)
+    private void SetupUnlock(byte[] password, string sessionToken)
     {
         _bwClientMock
             .Protected()
             .As<ITest>()
             .Setup(c =>
                 c.Request<string>(
-                    EmptyEnvVars.FAdd("BW_PASSWORD", password),
+                    EmptyEnvVars,
                     "unlock",
-                    "--passwordenv", "BW_PASSWORD", "--raw"))
+                    password,
+                    "--raw"))
             .ReturnsAsync(sessionToken);
     }
 
@@ -71,6 +70,7 @@ public class GetLoginsTests
                 c.Request<IReadOnlyList<Item>?>(
                     EmptyEnvVars.FAdd("BW_SESSION", sessionToken),
                     "list",
+                    Array.Empty<byte>(),
                     "items"))
             .ReturnsAsync(items);
     }
@@ -84,6 +84,7 @@ public class GetLoginsTests
                     c.Request<IReadOnlyList<Item>>(
                         EmptyEnvVars.FAdd("BW_SESSION", sessionToken),
                         "list",
+                        Array.Empty<byte>(),
                         "items"),
                 times);
     }
@@ -98,6 +99,7 @@ public class GetLoginsTests
                             .FAdd("BW_CLIENTID", clientId)
                             .FAdd("BW_CLIENTSECRET", clientSecret),
                         "login",
+                        Array.Empty<byte>(),
                         "--apikey"),
                 times);
     }
@@ -108,11 +110,11 @@ public class GetLoginsTests
             .Protected()
             .As<ITest>()
             .Verify(
-                c => c.Request<string>(AnyEnvVars, "login", "--apikey"),
+                c => c.Request<string>(AnyEnvVars, "login", Array.Empty<byte>(), "--apikey"),
                 Times.Never());
     }
 
-    private void VerifyUnlockCalled(string password, Times times)
+    private void VerifyUnlockCalled(byte[] password, Times times)
     {
         _bwClientMock
             .Protected()
@@ -120,24 +122,23 @@ public class GetLoginsTests
             .Verify(
                 c =>
                     c.Request<string>(
-                        EmptyEnvVars.FAdd("BW_PASSWORD", password),
+                        EmptyEnvVars,
                         "unlock",
-                        "--passwordenv", "BW_PASSWORD", "--raw"),
+                        password,
+                        "--raw"),
                 times);
     }
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_WhenUnauthorized(string password, string sessionToken, ApiKeys keys, List<Item> items,
+    public async Task GetLogins_WhenUnauthorized(byte[] password, string sessionToken, ApiKeys keys, List<Item> items,
         DateTime now)
     {
-        _secretsProviderMock.Setup(sm => sm.GetApiKeys()).ReturnsAsync(keys);
-        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
             .As<ITest>()
-            .SetupSequence(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
+            .SetupSequence(c => c.Request<StatusInfo>(EmptyEnvVars, "status", Array.Empty<byte>()))
             .ReturnsAsync(new StatusInfo { Status = "unauthenticated" })
             .ReturnsAsync(new StatusInfo { Status = "locked", LastSync = now });
 
@@ -145,7 +146,10 @@ public class GetLoginsTests
         SetupUnlock(password, sessionToken);
         SetupGetLogins(sessionToken, items);
 
-        var logins = await _bwClientMock.Object.GetItems();
+        var credentialsMock = new Mock<ICredentials>();
+        credentialsMock.SetupGet(c => c.Password).Returns(password);
+        credentialsMock.SetupGet(c => c.ApiKeys).Returns(keys);
+        var logins = await _bwClientMock.Object.GetItems(credentialsMock.Object);
 
         VerifyLoginCalled(keys.ClientId, keys.ClientSecret, Times.Once());
         VerifyUnlockCalled(password, Times.Once());
@@ -155,19 +159,21 @@ public class GetLoginsTests
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_WhenLocked(string password, string sessionToken, List<Item> items, DateTime now)
+    public async Task GetLogins_WhenLocked(byte[] password, string sessionToken, List<Item> items, DateTime now)
     {
-        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
             .As<ITest>()
-            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
+            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status", Array.Empty<byte>()))
             .ReturnsAsync(new StatusInfo { Status = "locked", LastSync = now });
         SetupUnlock(password, sessionToken);
         SetupGetLogins(sessionToken, items);
 
-        var logins = await _bwClientMock.Object.GetItems();
+        var credentialsMock = new Mock<ICredentials>();
+        credentialsMock.SetupGet(c => c.Password).Returns(password);
+        credentialsMock.SetupGet(c => c.ApiKeys).Returns(_fixture.Create<ApiKeys>());
+        var logins = await _bwClientMock.Object.GetItems(credentialsMock.Object);
 
         VerifyLoginNotCalled();
         VerifyUnlockCalled(password, Times.Once());
@@ -177,20 +183,21 @@ public class GetLoginsTests
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_WhenResultFailed(string password, string sessionToken, DateTime now)
+    public async Task GetLogins_WhenResultFailed(byte[] password, string sessionToken, DateTime now)
     {
-        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
             .As<ITest>()
-            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
+            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status", Array.Empty<byte>()))
             .ReturnsAsync(new StatusInfo { Status = "locked", LastSync = now });
         SetupUnlock(password, sessionToken);
         SetupGetLogins(sessionToken, null);
 
-        // var logins = await 
-        Func<Task> act = () => _bwClientMock.Object.GetItems();
+        var credentialsMock = new Mock<ICredentials>();
+        credentialsMock.SetupGet(c => c.Password).Returns(password);
+        credentialsMock.SetupGet(c => c.ApiKeys).Returns(_fixture.Create<ApiKeys>());
+        Func<Task> act = () => _bwClientMock.Object.GetItems(credentialsMock.Object);
 
         await act
             .ShouldThrowAsync<Exception>("Failed to get logins");
@@ -201,87 +208,52 @@ public class GetLoginsTests
     }
 
     [Fact]
-    public async Task GetLogins_WhenFailedToGetPassword()
-    {
-        var now = _fixture.Create<DateTime>();
-        _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
-        _bwClientMock
-            .Protected()
-            .As<ITest>()
-            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
-            .ReturnsAsync(new StatusInfo { Status = "locked", LastSync = now });
-
-        Func<Task> act = () => _bwClientMock.Object.GetItems();
-
-        await act
-            .ShouldThrowAsync<Exception>("Could not retrieve master password");
-
-        VerifyLoginNotCalled();
-        VerifyUnlockCalled(It.IsAny<string>(), Times.Never());
-        VerifyGetLoginsCalled(It.IsAny<string>(), Times.Never());
-    }
-
-    [Fact]
-    public async Task GetLogins_WhenFailedToGetApiKey()
-    {
-        _bwClientMock
-            .Protected()
-            .As<ITest>()
-            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
-            .ReturnsAsync(new StatusInfo { Status = "unauthenticated" });
-
-        Func<Task> act = () => _bwClientMock.Object.GetItems();
-
-        await act
-            .ShouldThrowAsync<Exception>("Could not retrieve Api Keys to login");
-
-        VerifyLoginNotCalled();
-        VerifyUnlockCalled(It.IsAny<string>(), Times.Never());
-        VerifyGetLoginsCalled(It.IsAny<string>(), Times.Never());
-    }
-
-    [Fact]
     public async Task GetLogins_WhenUnknownStatusReceived()
     {
         _bwClientMock
             .Protected()
             .As<ITest>()
-            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
+            .Setup(c => c.Request<StatusInfo>(EmptyEnvVars, "status", Array.Empty<byte>()))
             .ReturnsAsync(new StatusInfo { Status = _fixture.Create<string>() });
 
-        Func<Task> act = () => _bwClientMock.Object.GetItems();
+        var credentialsMock = new Mock<ICredentials>();
+        credentialsMock.SetupGet(c => c.Password).Returns(_fixture.Create<byte[]>());
+        credentialsMock.SetupGet(c => c.ApiKeys).Returns(_fixture.Create<ApiKeys>());
+        Func<Task> act = () => _bwClientMock.Object.GetItems(credentialsMock.Object);
 
         await act
             .ShouldThrowAsync<Exception>("Unknown status received");
 
         VerifyLoginNotCalled();
-        VerifyUnlockCalled(It.IsAny<string>(), Times.Never());
+        VerifyUnlockCalled(It.IsAny<byte[]>(), Times.Never());
         VerifyGetLoginsCalled(It.IsAny<string>(), Times.Never());
     }
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_ShouldSyncWhenOutdated(string password, string sessionToken, List<Item> items,
+    public async Task GetLogins_ShouldSyncWhenOutdated(byte[] password, string sessionToken, List<Item> items,
         DateTime now)
     {
-        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
             .As<ITest>()
-            .SetupSequence(c => c.Request<StatusInfo>(EmptyEnvVars, "status"))
+            .SetupSequence(c => c.Request<StatusInfo>(EmptyEnvVars, "status", Array.Empty<byte>()))
             .ReturnsAsync(new StatusInfo { Status = "locked", LastSync = now.AddDays(-2) })
             .ReturnsAsync(new StatusInfo { Status = "locked", LastSync = now });
         SetupUnlock(password, sessionToken);
         SetupGetLogins(sessionToken, items);
 
-        var logins = await _bwClientMock.Object.GetItems();
+        var credentialsMock = new Mock<ICredentials>();
+        credentialsMock.SetupGet(c => c.Password).Returns(password);
+        credentialsMock.SetupGet(c => c.ApiKeys).Returns(_fixture.Create<ApiKeys>());
+        var logins = await _bwClientMock.Object.GetItems(credentialsMock.Object);
 
         VerifyLoginNotCalled();
         _bwClientMock
             .Protected()
             .As<ITest>()
-            .Verify(c => c.Request<string>(EmptyEnvVars, "sync"), Times.Once());
+            .Verify(c => c.Request<string>(EmptyEnvVars, "sync", Array.Empty<byte>()), Times.Once());
         VerifyUnlockCalled(password, Times.Once());
         VerifyGetLoginsCalled(sessionToken, Times.Once());
         logins.ShouldBeEquivalentTo(items);

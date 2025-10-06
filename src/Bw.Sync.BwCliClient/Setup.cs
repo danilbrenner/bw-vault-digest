@@ -11,7 +11,6 @@ public static class Setup
     {
         return
             svc
-                .AddSingleton<ISecretsProvider, SecretsProvider>()
                 .AddTransient<IBwClient, BwClient>()
                 .AddTransient<ILoginProviderAdapter, LoginProviderAdapter>()
                 .AddTransient<DateTimeProvider>();
