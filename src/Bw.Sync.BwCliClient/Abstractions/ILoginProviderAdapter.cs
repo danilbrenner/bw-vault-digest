@@ -1,6 +1,6 @@
 using Bw.VaultBot.Model;
 
-namespace Bw.VaultBot.BwCliClient.Abstractions;
+namespace Bw.Sync.BwCliClient.Abstractions;
 
 public interface ILoginProviderAdapter
 {

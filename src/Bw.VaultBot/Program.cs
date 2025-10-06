@@ -1,5 +1,4 @@
-using Bw.VaultBot.BwCliClient;
-using Bw.VaultBot.Options;
+using Bw.Sync.BwCliClient;
 using Bw.VaultBot.Filters;
 using Bw.VaultBot.Data;
 using Bw.VaultBot.Jobs;
@@ -8,12 +7,14 @@ using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Builder;
+using Bw.VaultBot.Api;
 
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Local";
 
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .AddJsonFile($"appsettings.{environment}.json", optional: true)
+    .AddEnvironmentVariables()
     .Build();
 
 Log.Logger = new LoggerConfiguration()
@@ -31,7 +32,6 @@ try
         svc
             .AddAuthorizationFilter(connectionString!)
             .AddInfrastructure(cfg.Configuration)
-            .Configure<ScheduleOptions>(cfg.Configuration.GetSection("Schedule"))
             .AddHangfire(x => x
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
@@ -65,8 +65,10 @@ try
                 app.Services.GetRequiredService<IDashboardAsyncAuthorizationFilter>()
             ]
         })
-        .UseHangfireJobs();
+        .UseHangfireJobs(cancellationTokenSource.Token);
 
+    app.UseMiddleware<BasicAuthMiddleware>();
+    
     app.Run();
 }
 catch (Exception exception)

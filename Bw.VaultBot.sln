@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultBot", "src\Bw.Vault
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultBot.UnitTests", "tests\Bw.VaultBot.UnitTests\Bw.VaultBot.UnitTests.csproj", "{7A62018F-0504-43A3-B24E-4C8188E1A3A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.VaultBot.BwCliClient", "src\Bw.VaultBot.BwCliClient\Bw.VaultBot.BwCliClient.csproj", "{6D2C459F-BE28-423A-BF3E-6E38F3593232}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bw.Sync.BwCliClient", "src\Bw.Sync.BwCliClient\Bw.Sync.BwCliClient.csproj", "{6D2C459F-BE28-423A-BF3E-6E38F3593232}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

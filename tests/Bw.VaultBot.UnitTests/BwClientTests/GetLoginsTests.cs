@@ -1,8 +1,8 @@
 using AutoFixture.Xunit2;
-using Bw.VaultBot.BwCliClient;
-using Bw.VaultBot.BwCliClient.Abstractions;
-using Bw.VaultBot.BwCliClient.BwClientProvider;
-using Bw.VaultBot.BwCliClient.Models;
+using Bw.Sync.BwCliClient;
+using Bw.Sync.BwCliClient.Abstractions;
+using Bw.Sync.BwCliClient.BwClientProvider;
+using Bw.Sync.BwCliClient.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq.Protected;
@@ -23,12 +23,12 @@ public class GetLoginsTests
     private readonly Mock<DateTimeProvider> _dateTimeProviderMock = new();
 
     private readonly Fixture _fixture = new();
-    private readonly Mock<ISecretManagerClient> _secretManagerClientMock = new();
+    private readonly Mock<ISecretsProvider> _secretsProviderMock = new();
 
     public GetLoginsTests()
     {
         _bwClientMock = new Mock<BwClient>(
-            _secretManagerClientMock.Object,
+            _secretsProviderMock.Object,
             _dateTimeProviderMock.Object,
             NullLogger<BwClient>.Instance);
     }
@@ -131,8 +131,8 @@ public class GetLoginsTests
     public async Task GetLogins_WhenUnauthorized(string password, string sessionToken, ApiKeys keys, List<Item> items,
         DateTime now)
     {
-        _secretManagerClientMock.Setup(sm => sm.GetApiKeys()).ReturnsAsync(keys);
-        _secretManagerClientMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
+        _secretsProviderMock.Setup(sm => sm.GetApiKeys()).ReturnsAsync(keys);
+        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
@@ -157,7 +157,7 @@ public class GetLoginsTests
     [AutoData]
     public async Task GetLogins_WhenLocked(string password, string sessionToken, List<Item> items, DateTime now)
     {
-        _secretManagerClientMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
+        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
@@ -179,7 +179,7 @@ public class GetLoginsTests
     [AutoData]
     public async Task GetLogins_WhenResultFailed(string password, string sessionToken, DateTime now)
     {
-        _secretManagerClientMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
+        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()
@@ -264,7 +264,7 @@ public class GetLoginsTests
     public async Task GetLogins_ShouldSyncWhenOutdated(string password, string sessionToken, List<Item> items,
         DateTime now)
     {
-        _secretManagerClientMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
+        _secretsProviderMock.Setup(sm => sm.GetPassword()).ReturnsAsync(password);
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
             .Protected()

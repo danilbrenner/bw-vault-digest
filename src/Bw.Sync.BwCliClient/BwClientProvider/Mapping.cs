@@ -1,7 +1,7 @@
-using Bw.VaultBot.BwCliClient.Models;
+using Bw.Sync.BwCliClient.Models;
 using Bw.VaultBot.Model;
 
-namespace Bw.VaultBot.BwCliClient.BwClientProvider;
+namespace Bw.Sync.BwCliClient.BwClientProvider;
 
 public static class Mapping
 {

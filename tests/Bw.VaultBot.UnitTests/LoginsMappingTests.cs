@@ -1,4 +1,4 @@
-using Bw.VaultBot.BwCliClient.BwClientProvider;
+using Bw.Sync.BwCliClient.BwClientProvider;
 using Bw.VaultBot.Model;
 
 namespace Bw.VaultBot.UnitTests;

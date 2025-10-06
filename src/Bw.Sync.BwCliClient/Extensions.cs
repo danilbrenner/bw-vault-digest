@@ -1,5 +1,5 @@
 
-namespace Bw.VaultBot.BwCliClient;
+namespace Bw.Sync.BwCliClient;
 
 public static class Extensions
 {

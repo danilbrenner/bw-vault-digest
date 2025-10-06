@@ -1,15 +1,15 @@
 using System.Diagnostics;
 using System.Text.Json;
-using Bw.VaultBot.BwCliClient.Abstractions;
-using Bw.VaultBot.BwCliClient.Models;
+using Bw.Sync.BwCliClient.Abstractions;
+using Bw.Sync.BwCliClient.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Bw.VaultBot.BwCliClient.BwClientProvider;
+namespace Bw.Sync.BwCliClient.BwClientProvider;
 
 using EnvVariables = IDictionary<string, string>;
 
 public class BwClient(
-    ISecretManagerClient secretManagerClient,
+    ISecretsProvider secretsProvider,
     DateTimeProvider dateTimeProvider,
     ILogger<BwClient> logger) : IBwClient
 {
@@ -59,7 +59,7 @@ public class BwClient(
     {
         logger.LogTrace("Unlocking the vault");
 
-        var password = await secretManagerClient.GetPassword();
+        var password = await secretsProvider.GetPassword();
         if (password is null) throw new ApplicationException("Could not retrieve master password");
 
         return await Request<string>(
@@ -73,7 +73,7 @@ public class BwClient(
     {
         logger.LogTrace("Authenticating vault");
 
-        var apiKeys = await secretManagerClient.GetApiKeys();
+        var apiKeys = await secretsProvider.GetApiKeys();
 
         if (apiKeys is null) throw new ApplicationException("Could not retrieve Api Keys to login");
 

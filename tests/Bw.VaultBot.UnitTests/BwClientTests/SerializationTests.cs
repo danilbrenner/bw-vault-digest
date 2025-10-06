@@ -1,6 +1,6 @@
 using System.Text.Json;
-using Bw.VaultBot.BwCliClient.BwClientProvider;
-using Bw.VaultBot.BwCliClient.Models;
+using Bw.Sync.BwCliClient.BwClientProvider;
+using Bw.Sync.BwCliClient.Models;
 
 namespace Bw.VaultBot.UnitTests.BwClientTests;
 

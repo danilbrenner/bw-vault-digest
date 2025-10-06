@@ -1,15 +1,23 @@
 using System.Globalization;
 using System.Text;
+using Bw.Sync.BwCliClient.Abstractions;
 using Bw.VaultBot.Model;
+using Bw.VaultBot.Storage;
 using CsvHelper;
 
 namespace Bw.VaultBot.Jobs;
 
-public class ExportLoginsJob(ILogger<ExportLoginsJob> logger)
+public class ExportLoginsJob(ILogger<ExportLoginsJob> logger, ILoginProviderAdapter loginProvider, IStorage storage)
 {
-    public async Task Execute()
+    public async Task Execute(CancellationToken cancellationToken)
     {
-        await RunAsync(CancellationToken.None);
+        logger.LogInformation("Starting sync job");
+        
+        var logins = await loginProvider.GetLogins();
+        await storage.SaveAsync(DateTime.Now.ToCsvFileName(), await ToCsv(logins), cancellationToken);
+        
+        logger.LogInformation("Sync job completed");
+
     }
 
     private static async Task<MemoryStream> ToCsv(LoginsSet set)
@@ -23,41 +31,5 @@ public class ExportLoginsJob(ILogger<ExportLoginsJob> logger)
         await streamWriter.FlushAsync();
 
         return memoryStream;
-    }
-
-    // private static async Task<Unit> SaveToFile(MemoryStream stream)
-    // {
-    //     stream.Position = 0;
-    //     await using var file = File.Create("output.csv");
-    //     await stream.CopyToAsync(file);
-    //     return Unit.Default;
-    // }
-    //
-    // private static Func<MemoryStream, Task<Unit>> UploadToAzure(string connectionString, string containerName, string blobName) =>
-    //     async stream =>
-    //     {
-    //         stream.Position = 0;
-    //
-    //         var blobClient = new BlobContainerClient(connectionString, containerName);
-    //         await blobClient.CreateIfNotExistsAsync();
-    //
-    //         var blob = blobClient.GetBlobClient(blobName);
-    //         await blob.UploadAsync(stream, overwrite: true);
-    //         return Unit.Default;
-    //     };
-
-    protected async Task RunAsync(CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Starting sync service");
-        await Task.Delay(30000, cancellationToken);
-        
-        // var logins = await
-        //     TryAsync(loginProvider.GetLogins)
-        //         .ThenTry(ToCsv)
-        //         .ThenTry(SaveToFile)
-        //         // .ThenTry(UploadToAzure("", "tests", "logins.csv"))
-        //         .Match(
-        //             set => $"All done!!",
-        //             err => err.Message);
     }
 }

@@ -1,10 +1,9 @@
-﻿using Bw.VaultBot.BwCliClient.Abstractions;
-using Bw.VaultBot.BwCliClient.BwClientProvider;
-using Bw.VaultBot.BwCliClient.Options;
+﻿using Bw.Sync.BwCliClient.Abstractions;
+using Bw.Sync.BwCliClient.BwClientProvider;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Bw.VaultBot.BwCliClient;
+namespace Bw.Sync.BwCliClient;
 
 public static class Setup
 {
@@ -12,8 +11,7 @@ public static class Setup
     {
         return
             svc
-                .Configure<SecretManagerOptions>(config.GetSection("SecretManager"))
-                .AddTransient<ISecretManagerClient, AzureSecretManagerClient>()
+                .AddSingleton<ISecretsProvider, SecretsProvider>()
                 .AddTransient<IBwClient, BwClient>()
                 .AddTransient<ILoginProviderAdapter, LoginProviderAdapter>()
                 .AddTransient<DateTimeProvider>();

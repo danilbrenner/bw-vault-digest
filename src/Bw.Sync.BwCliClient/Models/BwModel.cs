@@ -1,4 +1,4 @@
-namespace Bw.VaultBot.BwCliClient.BwClientProvider;
+namespace Bw.Sync.BwCliClient.BwClientProvider;
 
 public class StatusInfo
 {

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Bw.VaultBot.BwCliClient\Bw.VaultBot.BwCliClient.csproj" />
+        <ProjectReference Include="..\Bw.Sync.BwCliClient\Bw.Sync.BwCliClient.csproj" />
     </ItemGroup>
 
     <ItemGroup>
