@@ -23,7 +23,7 @@ public class BwClient(
 
     public async Task<string> GetUserEmail(ICredentials credentials)
     {
-        var status = await Request<StatusInfo>(EmptyEnvVars, "status", []);
+        var status = await Request<StatusInfo>(EmptyEnvVars, "status");
         return
             status switch
             {
@@ -35,73 +35,76 @@ public class BwClient(
 
     public async Task<IReadOnlyList<Item>> GetItems(ICredentials credentials)
     {
-        logger.LogTrace("Getting items");
+        logger.LogInformation("Getting items");
 
         var session = await GetSession(credentials);
 
-        logger.LogTrace("Session received");
+        logger.LogInformation("Session received");
 
         var items =
             await Request<IReadOnlyList<Item>>(
                 EmptyEnvVars.FAdd("BW_SESSION", session),
                 "list",
-                [],
                 "items");
 
         if (items is null)
             throw new Exception("Failed to get logins");
 
-        logger.LogTrace("Got items, {Cnt}", items.Count);
+        logger.LogInformation("Got items, {Cnt}", items.Count);
 
         return items;
     }
 
     private async Task<string> Unlock(ICredentials credentials)
     {
-        logger.LogTrace("Unlocking the vault");
+        logger.LogInformation("Unlocking the vault");
+
+        // Necassary evil: bw cli accepts only string, Should refactor to use string everywhere(ok for short lived process)
+        var password = Encoding.UTF8.GetString(credentials.Password.Span); 
         
-        return await Request<string>(
-            EmptyEnvVars,
+        var session = await Request<string>(
+            EmptyEnvVars.FAdd("BW_PASSWORD", password),
             "unlock",
-            credentials.Password,
+            "--passwordenv", "BW_PASSWORD", 
             "--raw");
+
+        return session;
     }
 
     private async Task<string> Authenticate(ICredentials credentials)
     {
-        logger.LogTrace("Authenticating vault");
+        logger.LogInformation("Authenticating vault");
         
         _ = await Request<string>(
             EmptyEnvVars
                 .FAdd("BW_CLIENTID", credentials.ApiKeys.ClientId)
                 .FAdd("BW_CLIENTSECRET", credentials.ApiKeys.ClientSecret),
             "login",
-            [],
             "--apikey");
 
-        logger.LogTrace("Vault authentication Succeeded");
+        logger.LogInformation("Vault authentication Succeeded");
 
         return await GetSession(credentials);
     }
 
     private async Task<string> Sync(ICredentials credentials)
     {
-        logger.LogTrace("Synchronizing vault");
+        logger.LogInformation("Synchronizing vault");
 
-        _ = await Request<string>(EmptyEnvVars, "sync", []);
+        _ = await Request<string>(EmptyEnvVars, "sync");
 
-        logger.LogTrace("Vault synchronization Succeeded");
+        logger.LogInformation("Vault synchronization Succeeded");
 
         return await GetSession(credentials);
     }
 
     private async Task<string> GetSession(ICredentials credentials)
     {
-        logger.LogTrace("Getting session");
+        logger.LogInformation("Getting session");
 
-        var status = await Request<StatusInfo>(EmptyEnvVars, "status", []);
+        var status = await Request<StatusInfo>(EmptyEnvVars, "status");
 
-        logger.LogTrace("Got session status {Status}", status.Status);
+        logger.LogInformation("Got session status {Status}", status.Status);
 
         return
             status switch
@@ -114,7 +117,7 @@ public class BwClient(
             };
     }
 
-    protected virtual async Task<T> Request<T>(EnvVariables envVariables, string command, byte[] stdIn, params string[] options)
+    protected virtual async Task<T> Request<T>(EnvVariables envVariables, string command, params string[] options)
     {
         using var process = new Process();
         process.StartInfo.FileName = "bw";
@@ -129,14 +132,7 @@ public class BwClient(
         process.StartInfo.RedirectStandardError = true;
 
         process.Start();
-        
-        if(stdIn is { Length: > 0 })
-        {
-            await process.StandardInput.BaseStream.WriteAsync(stdIn);
-            await process.StandardInput.BaseStream.FlushAsync();
-            process.StandardInput.Close();
-        }
-        
+
         var outputAwaiter = process.StandardOutput.ReadToEndAsync();
         var errOutAwaiter = process.StandardError.ReadToEndAsync();
 

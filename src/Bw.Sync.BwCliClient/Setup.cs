@@ -7,7 +7,7 @@ namespace Bw.Sync.BwCliClient;
 
 public static class Setup
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection svc, IConfiguration config)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection svc)
     {
         return
             svc

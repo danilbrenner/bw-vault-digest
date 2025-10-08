@@ -1,12 +1,8 @@
 
+using Bw.Sync.Console;
+
 namespace Bw.Sync.UnitTests
 {
-    public static class One
-    {
-        public static string ToCsvFileName(this DateTime dateTime)
-            => $"logins_{dateTime:yyyyMMddHHmmss}.csv";
-    }
-    
     public class JobsExtensionsTests
     {
         [Fact]
