@@ -6,6 +6,12 @@ namespace Bw.Sync.Console.FileUploader;
 
 public class AzureBlobFileUploader(IConfiguration configuration, ILogger<AzureBlobFileUploader> logger) : IFileUploader
 {
+    // "UploadTo": {
+    //     "Type": "AzureBlob",
+    //     "ConnectionString": "",
+    //     "ContainerName": ""
+    // },
+    
     public async Task Upload(string path, Stream data, CancellationToken cancellationToken)
     {
         logger.LogInformation("Uploading file using Azure Blob Storage");

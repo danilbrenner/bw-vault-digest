@@ -58,6 +58,7 @@ public static class Program
     {
         var configuration = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables()
             .Build();
 
         Log.Logger = new LoggerConfiguration()

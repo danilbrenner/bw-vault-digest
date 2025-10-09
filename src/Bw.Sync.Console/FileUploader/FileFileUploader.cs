@@ -5,6 +5,12 @@ namespace Bw.Sync.Console.FileUploader;
 
 public class FileFileUploader(IConfiguration configuration, ILogger<FileFileUploader> logger) : IFileUploader
 {
+    
+    //  "UploadTo": {
+    //    "Type": "File",
+    //    "BasePath": "./output"
+    //  },
+    
     public async Task Upload(string path, Stream data, CancellationToken cancellationToken)
     {
         logger.LogInformation("Saving file using local file system");
