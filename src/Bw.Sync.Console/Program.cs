@@ -16,7 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class Program
 {
-    private static Span<byte> ReadMasterPassword()
+    private static byte[] ReadMasterPassword()
     {
         Console.Write("Enter master password: ");
 
