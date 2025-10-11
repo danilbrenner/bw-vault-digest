@@ -47,7 +47,7 @@ public static class Program
                         var charBytes = Encoding.UTF8.GetBytes(key.KeyChar.ToString());
                         Array.Copy(charBytes, 0, buffer, length, charBytes.Length);
                         length += charBytes.Length;
-                        Console.Write(charBytes.Select(_ => "*").Aggregate("", (a, b) => a + b));
+                        Console.Write(new string('*', charBytes.Length));
                     }
 
                     continue;
