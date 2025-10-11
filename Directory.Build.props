@@ -9,6 +9,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Deterministic>true</Deterministic>
         <WarningsAsErrors>true</WarningsAsErrors>
+        <IncludeTransitiveProjectReferencesInPackage>true</IncludeTransitiveProjectReferencesInPackage>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
 </Project>
-
