@@ -59,7 +59,7 @@ public class BwClient(
     {
         logger.LogInformation("Unlocking the vault");
 
-        // Necassary evil: bw cli accepts only string, Should refactor to use string everywhere(ok for short lived process)
+        // Necessary evil: bw cli accepts only string, Should refactor to use string everywhere(ok for short lived process)
         var password = Encoding.UTF8.GetString(credentials.Password.Span); 
         
         var session = await Request<string>(
