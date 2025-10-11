@@ -65,8 +65,7 @@ public class BwClient(
         var session = await Request<string>(
             EmptyEnvVars.FAdd("BW_PASSWORD", password),
             "unlock",
-            "--passwordenv", "BW_PASSWORD", 
-            "--raw");
+            "--passwordenv", "BW_PASSWORD", "--raw");
 
         return session;
     }
