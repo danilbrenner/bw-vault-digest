@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 using Bw.Sync.BwCliClient;
 using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.BwClientProvider;
@@ -32,7 +33,7 @@ public static class Program
                     Console.WriteLine();
                     var password = new byte[length];
                     Buffer.BlockCopy(buffer, 0, password, 0, length);
-                    CryptographicOperations.ZeroMemory(buffer); // Zero temp buffer
+                    CryptographicOperations.ZeroMemory(buffer);
                     return password;
                 case ConsoleKey.Backspace when length > 0:
                     length--;
@@ -43,9 +44,10 @@ public static class Program
                     if (char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar) ||
                         char.IsSymbol(key.KeyChar))
                     {
-                        buffer[length] = (byte)key.KeyChar;
-                        length++;
-                        Console.Write("*");
+                        var charBytes = Encoding.UTF8.GetBytes(key.KeyChar.ToString());
+                        Array.Copy(charBytes, 0, buffer, length, charBytes.Length);
+                        length += charBytes.Length;
+                        Console.Write(charBytes.Select(_ => "*").Aggregate("", (a, b) => a + b));
                     }
 
                     continue;
