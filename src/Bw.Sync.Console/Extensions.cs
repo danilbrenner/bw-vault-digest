@@ -1,8 +1,7 @@
-using System;
 using System.Globalization;
-using System.IO;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.Models;
 using CsvHelper;
 
@@ -10,6 +9,9 @@ namespace Bw.Sync.Console;
 
 public static class Extensions
 {
+    public static Stream ToStream(this string value)
+        => new MemoryStream(Encoding.UTF8.GetBytes(value));
+
     public static async Task<MemoryStream> ToCsvStream(this LoginsSet set)
     {
         var memoryStream = new MemoryStream();
@@ -20,7 +22,9 @@ public static class Extensions
         return memoryStream;
     }
 
-    public static string ToCsvFileName(this DateTime dateTime)
-        => $"logins_{dateTime:yyyyMMddHHmmss}.csv";
+    public static string GetPasswordHash(this ICredentials credentials, string salt)
+    {
+        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes($"{credentials.Password}{salt}"));
+        return BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLowerInvariant();
+    }
 }
-

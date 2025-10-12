@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using Bw.Sync.BwCliClient;
+﻿using Bw.Sync.BwCliClient;
 using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.BwClientProvider;
 using Bw.Sync.BwCliClient.Models;
@@ -61,18 +59,21 @@ public static class Program
 
             var clientId = configuration["ApiKeys:ClientId"] ?? string.Empty;
             var clientSecret = configuration["ApiKeys:ClientSecret"] ?? string.Empty;
-
+            var hashSalt = configuration["HashSalt"] ?? string.Empty;
 
             var credentials = new SecurityCredentials(
                 ReadMasterPassword(),
                 new ApiKeys(clientId, clientSecret));
-            
+
             var logins = await provider.GetLogins(credentials);
+            using var loginsStream = await logins.ToCsvStream();
 
-            var stream = logins.ToCsvStream();
+            var folder = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            
+            await fileUploader.Upload($"{folder}/logins.csv", loginsStream, CancellationToken.None);
 
-            var fileName = DateTime.UtcNow.ToCsvFileName();
-            await fileUploader.Upload(fileName, await stream, CancellationToken.None);
+            await using var mpStream = credentials.GetPasswordHash(hashSalt).ToStream();
+            await fileUploader.Upload($"{folder}/mp", mpStream, CancellationToken.None);
 
             Log.Information("Application finished successfully");
             Environment.ExitCode = 0;
