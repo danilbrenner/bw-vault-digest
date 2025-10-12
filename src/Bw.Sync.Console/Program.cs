@@ -17,43 +17,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class Program
 {
-    private static byte[] ReadMasterPassword()
+    private static string ReadMasterPassword()
     {
         Console.Write("Enter master password: ");
-
-        var buffer = new byte[256];
-        var length = 0;
-
-        while (true)
-        {
-            var key = Console.ReadKey(intercept: true);
-            switch (key.Key)
-            {
-                case ConsoleKey.Enter:
-                    Console.WriteLine();
-                    var password = new byte[length];
-                    Buffer.BlockCopy(buffer, 0, password, 0, length);
-                    CryptographicOperations.ZeroMemory(buffer);
-                    return password;
-                case ConsoleKey.Backspace when length > 0:
-                    length--;
-                    Console.Write("\b \b");
-                    continue;
-                default:
-                {
-                    if (char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar) ||
-                        char.IsSymbol(key.KeyChar))
-                    {
-                        var charBytes = Encoding.UTF8.GetBytes(key.KeyChar.ToString());
-                        Array.Copy(charBytes, 0, buffer, length, charBytes.Length);
-                        length += charBytes.Length;
-                        Console.Write(new string('*', charBytes.Length));
-                    }
-
-                    continue;
-                }
-            }
-        }
+        return Console.ReadLine() ?? string.Empty;
     }
 
     public static async Task Main(string[] args)
@@ -96,19 +63,16 @@ public static class Program
             var clientSecret = configuration["ApiKeys:ClientSecret"] ?? string.Empty;
 
 
-            using (var credentials =
-                   new SecureCredentials(
-                       ReadMasterPassword(),
-                       new ApiKeys(clientId, clientSecret))
-                  )
-            {
-                var logins = await provider.GetLogins(credentials);
+            var credentials = new SecurityCredentials(
+                ReadMasterPassword(),
+                new ApiKeys(clientId, clientSecret));
+            
+            var logins = await provider.GetLogins(credentials);
 
-                var stream = logins.ToCsvStream();
+            var stream = logins.ToCsvStream();
 
-                var fileName = DateTime.UtcNow.ToCsvFileName();
-                await fileUploader.Upload(fileName, await stream, CancellationToken.None);
-            }
+            var fileName = DateTime.UtcNow.ToCsvFileName();
+            await fileUploader.Upload(fileName, await stream, CancellationToken.None);
 
             Log.Information("Application finished successfully");
             Environment.ExitCode = 0;

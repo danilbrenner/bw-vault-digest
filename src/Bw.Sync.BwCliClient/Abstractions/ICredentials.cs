@@ -2,9 +2,8 @@ using Bw.Sync.BwCliClient.Models;
 
 namespace Bw.Sync.BwCliClient.Abstractions;
 
-public interface ICredentials : IDisposable
+public interface ICredentials
 {
-    ReadOnlyMemory<byte> Password { get; }
+    string Password { get; }
     ApiKeys ApiKeys { get; }
 }
-

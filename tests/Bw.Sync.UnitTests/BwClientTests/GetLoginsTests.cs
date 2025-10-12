@@ -124,7 +124,7 @@ public class GetLoginsTests
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_WhenUnauthorized(byte[] password, string sessionToken, ApiKeys keys, List<Item> items,
+    public async Task GetLogins_WhenUnauthorized(string password, string sessionToken, ApiKeys keys, List<Item> items,
         DateTime now)
     {
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
@@ -152,7 +152,7 @@ public class GetLoginsTests
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_WhenLocked(byte[] password, string sessionToken, List<Item> items, DateTime now)
+    public async Task GetLogins_WhenLocked(string password, string sessionToken, List<Item> items, DateTime now)
     {
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
@@ -176,7 +176,7 @@ public class GetLoginsTests
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_WhenResultFailed(byte[] password, string sessionToken, DateTime now)
+    public async Task GetLogins_WhenResultFailed(string password, string sessionToken, DateTime now)
     {
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);
         _bwClientMock
@@ -210,7 +210,7 @@ public class GetLoginsTests
             .ReturnsAsync(new StatusInfo { Status = _fixture.Create<string>() });
 
         var credentialsMock = new Mock<ICredentials>();
-        credentialsMock.SetupGet(c => c.Password).Returns(_fixture.Create<byte[]>());
+        credentialsMock.SetupGet(c => c.Password).Returns(_fixture.Create<string>());
         credentialsMock.SetupGet(c => c.ApiKeys).Returns(_fixture.Create<ApiKeys>());
         Func<Task> act = () => _bwClientMock.Object.GetItems(credentialsMock.Object);
 
@@ -224,7 +224,7 @@ public class GetLoginsTests
 
     [Theory]
     [AutoData]
-    public async Task GetLogins_ShouldSyncWhenOutdated(byte[] password, string sessionToken, List<Item> items,
+    public async Task GetLogins_ShouldSyncWhenOutdated(string password, string sessionToken, List<Item> items,
         DateTime now)
     {
         _dateTimeProviderMock.SetupGet(dp => dp.UtcNow).Returns(now);

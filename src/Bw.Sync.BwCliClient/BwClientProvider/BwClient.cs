@@ -59,11 +59,8 @@ public class BwClient(
     {
         logger.LogInformation("Unlocking the vault");
 
-        // Necessary evil: bw cli accepts only string, Should refactor to use string everywhere(ok for short lived process)
-        var password = Encoding.UTF8.GetString(credentials.Password.Span); 
-        
         var session = await Request<string>(
-            EmptyEnvVars.FAdd("BW_PASSWORD", password),
+            EmptyEnvVars.FAdd("BW_PASSWORD", credentials.Password),
             "unlock",
             "--passwordenv", "BW_PASSWORD", "--raw");
 
