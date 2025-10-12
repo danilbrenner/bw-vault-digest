@@ -18,7 +18,34 @@ public static class Program
     private static string ReadMasterPassword()
     {
         Console.Write("Enter master password: ");
-        return Console.ReadLine() ?? string.Empty;
+
+        var buffer = new char[256];
+        var length = 0;
+
+        while (true)
+        {
+            var key = Console.ReadKey(intercept: true);
+            switch (key.Key)
+            {
+                case ConsoleKey.Enter:
+                    Console.WriteLine();
+                    return new string(buffer, 0, length);
+                case ConsoleKey.Backspace when length > 0:
+                    length--;
+                    Console.Write("\b \b");
+                    continue;
+                default:
+                {
+                    if (char.IsLetterOrDigit(key.KeyChar) || char.IsPunctuation(key.KeyChar) || char.IsSymbol(key.KeyChar))
+                    {
+                        buffer[length++] = key.KeyChar;
+                        Console.Write('*');
+                    }
+
+                    continue;
+                }
+            }
+        }
     }
 
     public static async Task Main(string[] args)
@@ -50,7 +77,6 @@ public static class Program
                         .AddFileUploader(context.Configuration);
                 })
                 .Build();
-
 
             Log.Information("Application started");
 
