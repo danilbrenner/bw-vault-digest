@@ -59,23 +59,23 @@ public static class Program
 
             var clientId = configuration["ApiKeys:ClientId"] ?? string.Empty;
             var clientSecret = configuration["ApiKeys:ClientSecret"] ?? string.Empty;
-            var hashSalt = configuration["HashSalt"] ?? string.Empty;
+            var hashPepper = configuration["HashPepper"] ?? string.Empty;
 
             var credentials = new SecurityCredentials(
                 ReadMasterPassword(),
                 new ApiKeys(clientId, clientSecret));
 
+            var folder = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+
             var logins = await provider.GetLogins(credentials);
             using var loginsStream = await logins.ToCsvStream();
-
-            var folder = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-            
             await fileUploader.Upload($"{folder}/logins.csv", loginsStream, CancellationToken.None);
 
-            await using var mpStream = credentials.GetPasswordHash(hashSalt).ToStream();
-            await fileUploader.Upload($"{folder}/mp", mpStream, CancellationToken.None);
+            var hashString = await credentials.GetPasswordHash(hashPepper);
+            await using var ms = hashString.ToStream();
+            await fileUploader.Upload($"{folder}/mp", ms, CancellationToken.None);
 
-            Log.Information("Application finished successfully");
+            Log.Information("Export finished successfully");
             Environment.ExitCode = 0;
         }
         catch (Exception ex)

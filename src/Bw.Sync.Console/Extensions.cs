@@ -1,9 +1,9 @@
 using System.Globalization;
-using System.Security.Cryptography;
 using System.Text;
 using Bw.Sync.BwCliClient.Abstractions;
 using Bw.Sync.BwCliClient.Models;
 using CsvHelper;
+using Konscious.Security.Cryptography;
 
 namespace Bw.Sync.Console;
 
@@ -22,9 +22,19 @@ public static class Extensions
         return memoryStream;
     }
 
-    public static string GetPasswordHash(this ICredentials credentials, string salt)
+    public static async Task<string> GetPasswordHash(this ICredentials credentials, string pepper)
     {
-        var hashBytes = SHA256.HashData(Encoding.UTF8.GetBytes($"{credentials.Password}{salt}"));
-        return BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLowerInvariant();
+        var passwordBytes = Encoding.UTF8.GetBytes(credentials.Password);
+        var pepperBytes = Encoding.UTF8.GetBytes(pepper);
+
+        using var argon2 = new Argon2id(passwordBytes);
+        argon2.Salt = pepperBytes;
+        argon2.DegreeOfParallelism = 1;
+        argon2.Iterations = 2;
+        argon2.MemorySize = 1024 * 64;
+        
+        var hashBytes = await argon2.GetBytesAsync(32);
+        
+        return Convert.ToHexString(hashBytes).ToLowerInvariant();
     }
 }
