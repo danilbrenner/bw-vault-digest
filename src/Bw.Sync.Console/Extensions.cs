@@ -26,17 +26,21 @@ public static class Extensions
     {
         if (string.IsNullOrEmpty(pepper))
             throw new ArgumentException("Pepper must not be null or empty.", nameof(pepper));
+        
         var passwordBytes = Encoding.UTF8.GetBytes(credentials.Password);
         var pepperBytes = Encoding.UTF8.GetBytes(pepper);
+        var saltBytes = System.Security.Cryptography.SHA256.HashData(passwordBytes);
 
-        using var argon2 = new Argon2id(passwordBytes);
-        argon2.Salt = pepperBytes;
+        var passwordWithPepper = passwordBytes.Concat(pepperBytes).ToArray();
+
+        using var argon2 = new Argon2id(passwordWithPepper);
+        argon2.Salt = saltBytes;
         argon2.DegreeOfParallelism = 1;
         argon2.Iterations = 2;
         argon2.MemorySize = 1024 * 64;
-        
+
         var hashBytes = await argon2.GetBytesAsync(32);
-        
+
         return Convert.ToHexString(hashBytes).ToLowerInvariant();
     }
 }
