@@ -24,6 +24,8 @@ public static class Extensions
 
     public static async Task<string> GetPasswordHash(this ICredentials credentials, string pepper)
     {
+        if (string.IsNullOrEmpty(pepper))
+            throw new ArgumentException("Pepper must not be null or empty.", nameof(pepper));
         var passwordBytes = Encoding.UTF8.GetBytes(credentials.Password);
         var pepperBytes = Encoding.UTF8.GetBytes(pepper);
 
