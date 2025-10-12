@@ -36,7 +36,7 @@ public static class Extensions
         using var argon2 = new Argon2id(passwordWithPepper);
         argon2.Salt = saltBytes;
         argon2.DegreeOfParallelism = 1;
-        argon2.Iterations = 2;
+        argon2.Iterations = 3;
         argon2.MemorySize = 1024 * 64;
 
         var hashBytes = await argon2.GetBytesAsync(32);
