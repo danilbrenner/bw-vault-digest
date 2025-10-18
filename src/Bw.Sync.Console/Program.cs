@@ -98,8 +98,8 @@ public static class Program
             await fileUploader.Upload($"{folder}/logins.csv", loginsStream, CancellationToken.None);
 
             var hashString = await credentials.GetPasswordHash(hashPepper);
-            await using var ms = hashString.ToStream();
-            await fileUploader.Upload($"{folder}/mp", ms, CancellationToken.None);
+            await using var ms = $"hash\n{hashString}".ToStream();
+            await fileUploader.Upload($"{folder}/mp.csv", ms, CancellationToken.None);
 
             Log.Information("Export finished successfully");
             Environment.ExitCode = 0;
