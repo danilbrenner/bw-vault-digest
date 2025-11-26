@@ -15,7 +15,7 @@ public static class Mapping
     {
         char[] symbols = ['!', '@', '#', '$', '%', '^', '&', '*'];
         var login = item.Login;
-        if (login is null)
+        if (login?.Password is null)
             return Strength.VeryWeak;
         return (
                 login.Password.Length,
@@ -23,7 +23,7 @@ public static class Mapping
                 login.Password.Any(char.IsLower),
                 login.Password.Any(char.IsUpper),
                 login.Password.Any(symbols.Contains)
-            )
+            ) 
             switch
             {
                 (> 15, /*D*/true, /*L*/true, /*U*/true, /*S*/true) =>
